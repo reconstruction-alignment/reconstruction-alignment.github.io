@@ -3,1308 +3,296 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="RecA: Reconstruction Alignment Improves Unified Multimodal Models">
+  <meta name="description" content="RecA improves text-to-image generation and image editing in unified multimodal models through understanding-to-generation transfer and self-supervised post-training.">
   <meta property="og:title" content="RecA: Reconstruction Alignment Improves Unified Multimodal Models">
-  <meta property="og:description" content="Introducing RecA, a self-supervised training framework that aligns understanding and generation through image reconstruction at the semantic level.">
-  <meta property="og:url" content="https://horizonwind2004.github.io/RecA-Page">
+  <meta property="og:description" content="RecA improves text-to-image generation and image editing in unified multimodal models through understanding-to-generation transfer and self-supervised post-training.">
+  <meta property="og:url" content="https://reconstruction-alignment.github.io/">
   <meta name="twitter:title" content="RecA: Reconstruction Alignment Improves Unified Multimodal Models">
-  <meta name="twitter:description" content="Introducing RecA, a self-supervised training framework that aligns understanding and generation through image reconstruction at the semantic level.">
-  <meta name="keywords" content="RecA, Vision-Language, Multimodal, Image Generation, AI, Machine Learning">
+  <meta name="twitter:description" content="RecA improves text-to-image generation and image editing in unified multimodal models through understanding-to-generation transfer and self-supervised post-training.">
+  <link rel="canonical" href="https://reconstruction-alignment.github.io/">
+  <meta name="citation_title" content="Reconstruction Alignment Improves Unified Multimodal Models">
+  <meta name="citation_author" content="Ji Xie">
+  <meta name="citation_author" content="Trevor Darrell">
+  <meta name="citation_author" content="Luke Zettlemoyer">
+  <meta name="citation_author" content="XuDong Wang">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="International Conference on Learning Representations">
+  <meta name="citation_abstract_html_url" content="https://reconstruction-alignment.github.io/paper.html">
+  <meta name="citation_volume" content="2026">
+  <meta name="citation_firstpage" content="120095">
+  <meta name="citation_lastpage" content="120137">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "@id": "https://openreview.net/forum?id=ppQWp8yrm7",
+  "name": "Reconstruction Alignment Improves Unified Multimodal Models",
+  "url": "https://openreview.net/forum?id=ppQWp8yrm7",
+  "mainEntityOfPage": "https://reconstruction-alignment.github.io/",
+  "sameAs": [
+    "https://arxiv.org/abs/2509.07295"
+  ],
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Ji Xie",
+      "url": "https://horizonwind2004.github.io/"
+    },
+    {
+      "@type": "Person",
+      "name": "Trevor Darrell",
+      "url": "https://people.eecs.berkeley.edu/~trevor/"
+    },
+    {
+      "@type": "Person",
+      "name": "Luke Zettlemoyer",
+      "url": "https://homes.cs.washington.edu/~lsz/"
+    },
+    {
+      "@type": "Person",
+      "name": "XuDong Wang",
+      "url": "https://xudongfrankwang.github.io/",
+      "affiliation": [
+        {
+          "@type": "Organization",
+          "name": "UC Berkeley"
+        },
+        {
+          "@type": "Organization",
+          "name": "Duke University"
+        }
+      ]
+    }
+  ],
+  "description": "RecA improves text-to-image generation and image editing in unified multimodal models through understanding-to-generation transfer and self-supervised post-training.",
+  "isPartOf": {
+    "@type": "PublicationVolume",
+    "volumeNumber": "2026",
+    "isPartOf": {
+      "@type": "CreativeWork",
+      "name": "International Conference on Learning Representations"
+    }
+  },
+  "pageStart": "120095",
+  "pageEnd": "120137",
+  "keywords": [
+    "unified multimodal models",
+    "unified understanding and generation",
+    "self-supervised post-training",
+    "understanding-to-generation transfer",
+    "semantic reconstruction",
+    "text-to-image generation",
+    "image editing"
+  ]
+}
+</script>
   
-  <title>RecA: Reconstruction Alignment Improves Unified Multimodal Models</title>
+  <title>RecA: Reconstruction Alignment Improves Unified Multimodal Models | ICLR 2026</title>
   
   <link rel="icon" type="image/png" href="static/files/teaser/logo.png">
   <link rel="shortcut icon" href="static/files/teaser/logo.png" type="image/png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-          },
-          colors: {
-            primary: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              200: '#bae6fd',
-              300: '#7dd3fc',
-              400: '#38bdf8',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-              800: '#075985',
-              900: '#0c4a6e',
-            },
-            secondary: {
-              50: '#f8fafc',
-              100: '#f1f5f9',
-              200: '#e2e8f0',
-              300: '#cbd5e1',
-              400: '#94a3b8',
-              500: '#64748b',
-              600: '#475569',
-              700: '#334155',
-              800: '#1e293b',
-              900: '#0f172a',
-            },
-          },
-        }
-      }
-    }
-  </script>
-  
-  <style>
-    .gradient-text {
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .hero-pattern {
-      background-image: url('static/files/teaser/DEMO.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      position: relative;
-    }
-    
-    .hero-pattern::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.6);
-    }
-    
-    .hero-content {
-      position: relative;
-      z-index: 10;
-    }
-    
-    .card-hover {
-      transition: all 0.3s ease;
-    }
-    
-    .card-hover:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-    
-    .animate-float {
-      animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-15px); }
-      100% { transform: translateY(0px); }
-    }
-    
-    .text-shadow {
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* Custom styles for the demo gallery */
-    .demo-gallery-container {
-      position: relative;
-    }
-    
-    .demo-gallery {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: 1rem;
-      padding: 1rem 0;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none; /* Firefox */
-    }
-    
-    .demo-gallery::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera */
-    }
-    
-    .demo-item {
-      scroll-snap-align: start;
-      flex: 0 0 auto;
-      width: 350px;
-      height: 350px;
-      position: relative;
-      border-radius: 0.5rem;
-      overflow: hidden;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .demo-item:hover {
-      transform: scale(1.05);
-      z-index: 10;
-    }
-    
-    .demo-item.active {
-      border: 3px solid #3b82f6;
-      transform: scale(1.02);
-    }
-    
-    .demo-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .demo-prompt-display {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #f8fafc;
-      border-radius: 0.5rem;
-      border-left: 4px solid #3b82f6;
-      min-height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-size: 0.875rem;
-      line-height: 1.4;
-      color: #475569;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .demo-prompt-display.active {
-      opacity: 1;
-    }
-    
-    .demo-prompt-display .prompt-text {
-      font-weight: 500;
-    }
-    
-    /* Gallery navigation arrows */
-    .gallery-nav-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.9);
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 20px;
-      color: #374151;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      transition: all 0.3s ease;
-      z-index: 20;
-      opacity: 0.8;
-    }
-    
-    .gallery-nav-button:hover {
-      background: rgba(255, 255, 255, 1);
-      opacity: 1;
-      transform: translateY(-50%) scale(1.1);
-    }
-    
-    .gallery-nav-button:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-    
-    .gallery-nav-button:disabled:hover {
-      transform: translateY(-50%);
-    }
-    
-    .gallery-nav-left {
-      left: 10px;
-    }
-    
-    .gallery-nav-right {
-      right: 10px;
-    }
-    
-    /* Edit comparison slider styles */
-    .edit-comparison-container {
-      position: relative;
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      border-radius: 0.75rem;
-      overflow: hidden;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
-    
-    .edit-comparison-images {
-      position: relative;
-      width: 100%;
-      height: 400px;
-      overflow: hidden;
-    }
-    
-    .edit-original, .edit-result {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    
-    .edit-original img, .edit-result img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .edit-result {
-      clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%);
-    }
-    
-    .edit-slider {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 4px;
-      height: 100%;
-      background: white;
-      cursor: ew-resize;
-      transform: translateX(-50%);
-      z-index: 10;
-    }
-    
-    .edit-slider::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 20px;
-      height: 20px;
-      background: white;
-      border: 2px solid #3b82f6;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-    
-    .edit-labels {
-      position: absolute;
-      top: 1rem;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: space-between;
-      padding: 0 1rem;
-      z-index: 5;
-    }
-    
-    .edit-label {
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 0.375rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-    
-    .edit-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-    
-    .edit-prompt-area {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #f8fafc;
-      border-radius: 0.5rem;
-      border-left: 4px solid #10b981;
-      text-align: center;
-      font-size: 0.875rem;
-      color: #475569;
-    }
-    
-    .edit-prompt-area .prompt-label {
-      font-weight: 600;
-      color: #10b981;
-      margin-bottom: 0.5rem;
-    }
-    
-    .placeholder-img {
-      background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #9ca3af;
-      font-weight: 500;
-    }
-  </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750&display=swap" rel="stylesheet">
+<style>
+
+:root{--ink:#171b24;--muted:#626876;--blue:#315cf5;--line:#e0e3e9;--paper:#fff;--wash:#f4f6f9;--night:#111827;--max:1240px}
+*{box-sizing:border-box}html{scroll-padding-top:88px}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}button,input{font:inherit}button,a,input,summary{-webkit-tap-highlight-color:transparent}button{color:inherit;cursor:pointer}button:disabled{cursor:default;opacity:.28}img{display:block;max-width:100%;height:auto}figure,p,h1,h2,h3{margin:0}button{border:0}a:hover{color:var(--blue)}:focus-visible{outline:3px solid var(--blue);outline-offset:5px}section:focus{outline:none}::selection{background:#dce4ff}.wrap{width:min(var(--max),calc(100% - 96px));margin:auto}.muted{color:var(--muted)}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.eyebrow{font-size:14px;font-weight:600;letter-spacing:.09em;text-transform:uppercase}.arrow{font-size:20px;line-height:1}.text-link{display:inline-flex;align-items:center;gap:12px;font-weight:500;border-bottom:1px solid currentColor;padding-bottom:3px}.skip-link{position:fixed;top:8px;left:8px;z-index:20;padding:10px 16px;background:white;transform:translateY(-160%)}.skip-link:focus{transform:translateY(0)}
+.site-nav{height:76px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.97);position:sticky;top:0;z-index:10}.nav-inner{height:100%;display:flex;align-items:center;justify-content:space-between;gap:30px}.nav-brand{font-size:27px;letter-spacing:-1.5px;font-weight:750;display:flex;align-items:center;gap:10px}.nav-brand img{width:29px;height:29px;object-fit:contain}.nav-brand span{font-size:14px;letter-spacing:0;font-weight:400;color:var(--muted);border-left:1px solid var(--line);padding-left:20px;margin-left:12px}#nav-links{display:flex;align-items:center;gap:30px;font-size:14px;font-weight:500}.nav-paper{border:1px solid var(--line);padding:8px 17px;border-radius:4px}#menu-toggle{display:none;background:transparent;padding:8px;border:1px solid var(--line);border-radius:4px}
+.hero{padding:66px 0 0}.hero-main{display:grid;grid-template-columns:1.2fr 1fr;align-items:center;gap:60px}.acceptance{display:flex;align-items:center;gap:12px;margin-bottom:25px;font-size:14px}.acceptance strong{color:var(--blue);font-weight:650}.acceptance span{color:var(--muted);border-left:1px solid var(--line);padding-left:12px}h1{font-size:clamp(42px,4.4vw,66px);font-weight:600;line-height:1.04;letter-spacing:-.065em}h1 .title-rest{display:block;font-size:.53em;line-height:1.2;letter-spacing:-.04em;font-weight:450;max-width:490px;margin-top:19px}.hero-statement{font-size:21px;line-height:1.45;letter-spacing:-.025em;margin:25px 0 12px;max-width:500px}.hero-description{max-width:540px;color:var(--muted);font-size:16px;line-height:1.7}.hero-description strong{font-weight:550;color:var(--ink)}.resources{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:25px}.resource{display:inline-flex;gap:24px;align-items:center;padding:11px 17px;border:1px solid var(--line);border-radius:4px;font-size:14px;font-weight:500;transition:background .15s,color .15s,border-color .15s}.resource:hover{background:var(--wash);border-color:#bac1d0;color:var(--ink)}.resource.primary{background:var(--ink);color:white;border-color:var(--ink)}.resource.primary:hover{background:var(--blue);border-color:var(--blue)}.resource.quiet{border-color:transparent;padding-inline:7px}.hero-art{min-width:0;position:relative}.hero-art img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:5px}.hero-art figcaption{font-size:14px;color:var(--muted);display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-top:12px}.hero-art figcaption .mono{font-size:12px;letter-spacing:.06em;flex-shrink:0;color:var(--blue)}.author-band{margin-top:48px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:25px 0;display:flex;justify-content:space-between;align-items:center;gap:24px}.authors{display:flex;flex-wrap:wrap;column-gap:24px;row-gap:5px;font-size:16px}.authors a{font-weight:500}.authors sup,.affiliations sup{color:var(--blue);font-size:11px;margin-left:3px}.affiliations{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;margin-top:7px;color:var(--muted)}.author-note{font-size:13px;color:var(--muted);white-space:nowrap}
+.section{padding:88px 0}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:28px;margin-bottom:32px}.section-title{max-width:760px}.section-heading .eyebrow,.section-label{color:var(--blue);margin-bottom:13px}h2{font-size:clamp(30px,3vw,42px);line-height:1.15;font-weight:550;letter-spacing:-.045em}h3{font-size:21px;line-height:1.35;font-weight:550;letter-spacing:-.025em}.section-intro{color:var(--muted);max-width:520px;margin-top:15px;font-size:17px}.gallery-section{padding-top:64px}.gallery-controls{display:flex;gap:8px}.circle-btn{width:43px;height:43px;border:1px solid var(--line);background:white;border-radius:50%;font-size:23px;display:grid;place-items:center}.circle-btn:not(:disabled):hover{border-color:var(--ink);background:var(--wash)}.gallery{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 36px)/4);gap:12px;overflow-x:auto;padding:4px 0 15px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#c5cbda transparent}.demo-item{display:block;min-width:0;background:transparent;padding:0;text-align:left;scroll-snap-align:start;position:relative;border-radius:4px}.demo-item img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px}.demo-item .image-number{display:block;padding-top:10px;color:var(--muted);font-size:13px;letter-spacing:.06em}.demo-item[aria-pressed="true"] .image-number{color:var(--blue)}.demo-item[aria-pressed="true"]:after{content:'';position:absolute;bottom:0;left:0;width:35px;height:2px;background:var(--blue)}.demo-item:hover img{filter:brightness(1.035)}#promptDisplay{margin-top:12px;display:flex;gap:25px;border-top:1px solid var(--line);padding-top:17px;color:var(--muted);font-size:14px;min-height:75px}#promptDisplay .prompt-text{max-width:950px}.gallery-hint{font-size:14px;color:var(--muted);margin-top:10px}
+.method-section{background:var(--wash)}.method-lead{display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:start}.method-copy{font-size:18px;color:#505766;line-height:1.75}.method-copy strong{color:var(--ink);font-weight:550}.method-copy p+p{margin-top:18px}.pipeline{background:white;margin-top:40px;padding:30px 34px;border-radius:5px}.pipeline img{width:100%;height:auto}.pipeline figcaption{font-size:14px;color:var(--muted);margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}.method-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;margin-top:36px}.method-step{border-top:1px solid #cdd3de;padding-top:19px}.step-number{display:block;color:var(--blue);font-size:14px;margin-bottom:12px}.method-step p{margin-top:11px;color:var(--muted);font-size:16px}.training-note{margin-top:35px;padding-top:23px;border-top:1px solid #cdd3de;color:var(--muted);font-size:14px;max-width:100%}.training-note strong{color:var(--ink)}.training-note a{text-decoration:underline;text-underline-offset:3px}
+.motivation-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px}.motivation-item{min-width:0}.motivation-item p{color:var(--muted);margin:14px 0 25px;font-size:16px}.motivation-item figure{padding:20px 0}.motivation-item img{width:100%;object-fit:contain}.figure-caption{font-size:14px;color:var(--muted);margin-top:14px}.motivation-item h3{font-size:25px}.motivation-item .eyebrow{color:var(--blue);margin-bottom:16px}
+.results-section{background:var(--night);color:white}.results-section .eyebrow{color:#93aaff}.results-section .section-intro{color:#aab3c5}.result-blocks{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:42px}.result-block h3{font-size:18px;font-weight:500}.result-block .model-note{color:#aab3c5;font-size:14px;margin:5px 0 24px}.metric-row{border-top:1px solid #354052;padding:19px 0;display:flex;justify-content:space-between;align-items:center;gap:22px}.metric-name{font-size:15px;color:#d8deea}.metric-value{white-space:nowrap;display:flex;gap:14px;align-items:baseline;font-variant-numeric:tabular-nums}.metric-value .before{font-size:22px;color:#9da9bc;font-weight:400}.metric-value .to{font-size:20px;color:#65738c}.metric-value strong{font-size:40px;letter-spacing:-.055em;font-weight:550;color:#b6c6ff}.result-note{color:#aab3c5;font-size:14px;line-height:1.7;border-top:1px solid #354052;padding-top:18px}.result-note strong{font-weight:500;color:#e7ecf7}.figure-details{margin-top:28px;border-top:1px solid #354052}.figure-details summary{padding:19px 0;font-size:15px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}.figure-details summary::-webkit-details-marker{display:none}.figure-details summary:after{content:'+';font-size:23px;font-weight:300}.figure-details[open] summary:after{content:'−'}.figure-details figure{background:white;padding:20px;border-radius:4px;margin-bottom:25px}.figure-details figure+figure{margin-top:20px}.figure-details figcaption{color:var(--muted);font-size:14px;margin-top:12px}.results-link{display:inline-flex;color:#c5d1ff;border-bottom:1px solid #7186c7;padding-bottom:4px;margin-top:28px;font-size:15px;gap:18px}.results-link:hover{color:white}
+.editing-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 22px}.edit-item{min-width:0}.edit-comparison-container{position:relative;aspect-ratio:1;overflow:hidden;border-radius:4px;background:var(--wash)}.edit-original,.edit-result{position:absolute;inset:0}.edit-comparison-container img{width:100%;height:100%;object-fit:contain}.edit-result{clip-path:inset(0 0 0 50%)}.edit-slider{position:absolute;z-index:2;left:50%;top:0;bottom:0;width:2px;background:white;transform:translateX(-1px);pointer-events:none;box-shadow:0 0 4px #1115}.edit-slider:after{content:'↔';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:35px;height:35px;background:white;color:var(--ink);font-size:22px;border-radius:50%;box-shadow:0 1px 5px #1113}.edit-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;z-index:3;cursor:ew-resize;touch-action:pan-y}.edit-comparison-container:focus-within{outline:3px solid var(--blue);outline-offset:5px}.edit-label{position:absolute;top:12px;padding:3px 8px;background:#111827bb;color:white;font-size:12px;border-radius:3px;z-index:2;pointer-events:none}.edit-label.before{left:12px}.edit-label.after{right:12px}.edit-item figcaption{font-size:14px;margin-top:13px;display:flex;gap:14px;line-height:1.6}.edit-item figcaption .mono{font-size:12px;color:var(--muted);padding-top:2px}.editing-note{font-size:14px;color:var(--muted);margin-top:23px}.editing-note a{text-decoration:underline;text-underline-offset:3px}
+.citation-section{border-top:1px solid var(--line);padding:65px 0 55px}.citation-layout{display:grid;grid-template-columns:.8fr 1.4fr;gap:80px}.citation-intro p{color:var(--muted);margin-top:15px;font-size:16px;max-width:330px}.citation-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;color:var(--muted);font-size:14px}.copy-button{border:1px solid var(--line);background:white;padding:6px 12px;border-radius:4px;font-size:14px}.copy-button:hover{background:var(--wash)}pre{margin:0;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;line-height:1.9;background:var(--wash);padding:24px;border-radius:4px;color:#454e60}#citation-status{font-size:14px;color:var(--muted);min-height:24px;margin-top:9px}.site-footer{border-top:1px solid var(--line);padding:25px 0 30px}.footer-row{display:flex;justify-content:space-between;gap:30px;align-items:center;font-size:14px;color:var(--muted)}.footer-links{display:flex;flex-wrap:wrap;gap:23px}.visitor-stats{margin-top:25px;font-size:13px;color:var(--muted);max-width:250px}.visitor-stats summary{cursor:pointer}.visitor-map{margin-top:15px;max-width:200px;min-height:70px}#back-to-top{position:fixed;bottom:23px;right:23px;z-index:8;background:white;border:1px solid var(--line);width:43px;height:43px;border-radius:50%;font-size:23px;transition:opacity .15s}.opacity-0{opacity:0}.invisible{visibility:hidden}
+@media(min-width:1500px){.hero-main{gap:85px}.hero{padding-top:80px}}
+@media(max-width:1100px){.wrap{width:calc(100% - 64px)}.hero-main{gap:35px}h1{font-size:clamp(41px,4.8vw,57px)}.hero-statement{font-size:19px}.author-band{align-items:start}.author-note{white-space:normal;text-align:right;max-width:140px}.method-lead{gap:40px}.hero{padding-top:48px}.hero-art figcaption{font-size:12px}.result-blocks{gap:40px}.citation-layout{gap:40px}.nav-brand span{display:none}}
+@media(max-width:800px){.wrap{width:calc(100% - 40px)}.site-nav{height:65px}#nav-links{gap:18px}.hero-main{grid-template-columns:1.1fr 1fr;gap:24px}h1{font-size:40px}.hero-statement{font-size:18px}.hero-description{font-size:16px}.resource{padding:9px 12px;gap:13px}.hero-art figcaption{display:block}.hero-art figcaption .mono{display:block;margin-bottom:4px}.authors{column-gap:17px;font-size:15px}.affiliations{gap:12px;font-size:13px}.author-band{margin-top:30px}.author-note{display:none}.section{padding:65px 0}.gallery{grid-auto-columns:calc((100% - 24px)/3)}.method-lead{grid-template-columns:1fr;gap:24px}.method-copy{font-size:17px;max-width:670px}.method-steps{gap:23px}.method-step h3{font-size:19px}.method-step p{font-size:16px}.motivation-grid{gap:30px}.motivation-item h3{font-size:22px}.result-blocks{gap:30px}.metric-value{gap:8px}.metric-value strong{font-size:34px}.metric-value .before{font-size:19px}.metric-name{font-size:14px}.editing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.citation-layout{grid-template-columns:1fr;gap:26px}.citation-intro p{max-width:none}}
+@media(max-width:600px){html{scroll-padding-top:78px}.wrap{width:calc(100% - 36px)}.site-nav{height:auto;min-height:63px}.nav-inner{min-height:63px;flex-wrap:wrap;gap:0;padding-block:12px}.nav-brand{font-size:25px}.nav-brand img{width:26px;height:26px}#menu-toggle:not([hidden]){display:block;font-size:14px}#nav-links{width:100%;flex-wrap:wrap;padding:16px 0 7px;gap:16px 25px}#nav-links.is-collapsible{display:none}#nav-links.is-open{display:flex}.hero{padding-top:35px}.hero-main{grid-template-columns:1fr;gap:31px}h1{font-size:clamp(43px,11.5vw,63px);letter-spacing:-.06em}h1 .title-rest{font-size:.52em;margin-top:16px;max-width:390px}.acceptance{margin-bottom:21px}.hero-statement{font-size:20px;margin-top:22px}.hero-description{font-size:16px}.resources{gap:8px;margin-top:22px}.resource{padding:10px 13px}.hero-art img{aspect-ratio:1}.hero-art figcaption{display:flex;font-size:13px}.hero-art figcaption .mono{font-size:11px}.author-band{padding-block:22px;margin-top:29px}.authors{row-gap:8px;font-size:15px}.affiliations{font-size:13px;row-gap:4px}.section{padding:55px 0}.section-heading{gap:20px;margin-bottom:25px}h2{font-size:32px}.section-intro{font-size:16px}.eyebrow{font-size:12px}.gallery{grid-auto-columns:72%;gap:12px}.gallery-controls{gap:6px}.circle-btn{width:37px;height:37px}.gallery-hint{font-size:13px}#promptDisplay{font-size:13px;min-height:0}.pipeline{padding:15px;margin-top:26px}.pipeline figcaption{font-size:13px;margin-top:14px;padding-top:12px}.method-steps{grid-template-columns:1fr;gap:24px;margin-top:28px}.method-step{display:grid;grid-template-columns:30px 1fr;column-gap:15px;padding-top:16px}.step-number{grid-row:span 2;margin:0;padding-top:3px}.method-step p{margin-top:7px;font-size:16px}.training-note{font-size:13px;margin-top:26px}.motivation-grid{grid-template-columns:1fr;gap:45px}.motivation-item p{margin-bottom:10px}.motivation-item figure{padding:12px 0 0}.result-blocks{grid-template-columns:1fr;gap:36px;margin-top:30px}.metric-value strong{font-size:42px}.metric-value .before{font-size:23px}.metric-name{font-size:15px}.metric-value{gap:13px}.result-block .model-note{margin-bottom:18px}.figure-details figure{padding:10px}.editing-grid{gap:25px 14px}.edit-item figcaption{font-size:13px;gap:8px}.edit-item figcaption .mono{display:none}.edit-label{font-size:10px;padding:2px 5px;top:8px}.edit-label.before{left:7px}.edit-label.after{right:7px}.edit-slider:after{width:29px;height:29px;font-size:18px}.editing-note{font-size:13px}.citation-section{padding:45px 0 25px}pre{font-size:12px;padding:17px;line-height:1.8}.footer-row{align-items:start;flex-direction:column;gap:16px;font-size:13px}.footer-links{gap:19px}#back-to-top{bottom:15px;right:15px;width:38px;height:38px}}
+@media(max-width:370px){.wrap{width:calc(100% - 28px)}h1{font-size:40px}.editing-grid{grid-template-columns:1fr}.resource{padding:9px 10px}.gallery-controls{display:none}.hero-art figcaption{font-size:12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+</style>
 </head>
 
-<body class="font-sans bg-gray-50 text-gray-800">
-  <!-- Navigation -->
-  <nav class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
-        <div class="flex items-center">
-          <img src="static/files/teaser/logo.png" alt="RecA Logo" class="h-8 w-8 mr-2">
-          <span class="text-xl font-semibold text-gray-900">RecA</span>
-        </div>
-        <div class="hidden md:flex items-center space-x-8">
-          <a href="#abstract" class="text-gray-700 hover:text-primary-600 transition">Abstract</a>
-          <a href="#motivation" class="text-gray-700 hover:text-primary-600 transition">Motivation</a>
-          <a href="#approach" class="text-gray-700 hover:text-primary-600 transition">Approach</a>
-          <a href="#results" class="text-gray-700 hover:text-primary-600 transition">Results</a>
-          <a href="#demo" class="text-gray-700 hover:text-primary-600 transition">Gallery</a>
-          <a href="https://huggingface.co/spaces/sanaka87/BAGEL-RecA" target="_blank" class="inline-flex items-center px-4 py-2 border border-primary-600 text-sm font-medium rounded-md text-primary-600 bg-white hover:bg-primary-50 transition">
-            <i class="fas fa-play-circle mr-2"></i>
-            Demo
-          </a>
-        </div>
-        <div class="flex items-center md:hidden">
-          <!-- Mobile menu button -->
-          <button class="text-gray-500 hover:text-gray-900 focus:outline-none">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </nav>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-nav"><div class="wrap nav-inner">
+<a class="nav-brand" href="#top"><img src="static/files/teaser/logo.png" width="29" height="29" alt="">RecA<span>Reconstruction Alignment</span></a>
+<button id="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links" hidden>Menu</button>
+<nav id="nav-links" aria-label="Main navigation"><a href="#approach">Method</a><a href="#results">Results</a><a href="#editing">Editing</a><a href="#citation">Citation</a><a class="nav-paper" href="https://arxiv.org/pdf/2509.07295" target="_blank" rel="noopener noreferrer">Read paper ↗</a></nav>
+</div></header>
+<main id="main">
+<section id="top" class="hero"><div class="wrap">
+<div class="hero-main"><div class="hero-copy">
+<p class="acceptance"><strong>ICLR 2026</strong><span>Accepted paper</span></p>
+<h1>Reconstruction <br>Alignment <span class="title-rest">Improves Unified Multimodal Models</span></h1>
+<p class="hero-statement">Improving image generation<br>through visual understanding.</p>
+<p class="hero-description">A <strong>self-supervised post-training</strong> method for unified multimodal models. RecA reconstructs images from the model’s own visual understanding features—transferring visual understanding to text-to-image generation and image editing.</p>
+<div class="resources"><a class="resource primary" href="paper.html" target="_blank" rel="noopener noreferrer">Paper <span class="arrow">↗</span></a><a class="resource" href="https://github.com/HorizonWind2004/reconstruction-alignment" target="_blank" rel="noopener noreferrer">Code <span class="arrow">↗</span></a><a class="resource" href="https://huggingface.co/collections/sanaka87/reca-68ad2176380355a3dcedc068" target="_blank" rel="noopener noreferrer">Models <span class="arrow">↗</span></a><a class="resource quiet" href="https://huggingface.co/spaces/sanaka87/BAGEL-RecA" target="_blank" rel="noopener noreferrer">Try the demo ↗</a></div>
+</div><figure class="hero-art"><img src="static/files/demo/image1.jpg" alt="A Van Gogh style painting of a cyberpunk city at sunrise, generated with RecA." width="1024" height="1024" fetchpriority="high"><figcaption><span>A cyberpunk sunrise, in the style of Van Gogh.</span><span class="mono">GENERATED WITH RecA</span></figcaption></figure></div>
+<div class="author-band"><div><div class="authors"><a href="https://horizonwind2004.github.io/" target="_blank" rel="noopener noreferrer">Ji Xie<sup>1</sup></a><a href="https://people.eecs.berkeley.edu/~trevor/" target="_blank" rel="noopener noreferrer">Trevor Darrell<sup>1</sup></a><a href="https://homes.cs.washington.edu/~lsz/" target="_blank" rel="noopener noreferrer">Luke Zettlemoyer<sup>2</sup></a><a href="https://xudongfrankwang.github.io/" target="_blank" rel="noopener noreferrer">XuDong Wang<sup>1,3,†</sup></a></div><div class="affiliations"><span><sup>1</sup> UC Berkeley</span><span><sup>2</sup> University of Washington</span><span><sup>3</sup> Duke University</span></div></div><p class="author-note">† Corresponding author</p></div>
+</div></section>
+<section id="demo" class="section gallery-section"><div id="generation" class="wrap">
+<div class="section-heading"><div class="section-title"><p class="eyebrow">01 / Text-to-image generation</p><h2>From understanding to imagination.</h2><p class="gallery-hint">Text-to-image samples. Select an image to read its prompt.</p></div><div class="gallery-controls"><button type="button" id="galleryPrevBtn" class="circle-btn" aria-label="Previous generated images">←</button><button type="button" id="galleryNextBtn" class="circle-btn" aria-label="Next generated images">→</button></div></div>
+<div id="demoGallery" class="gallery" aria-label="Text-to-image generation samples"><button type="button" class="demo-item" data-prompt="A Van Gogh style painting of a cyberpunk city at sunrise." aria-label="View prompt for generated image 1" aria-pressed="true" aria-controls="promptDisplay"><img src="static/files/demo/image1.jpg" alt="A Van Gogh style painting of a cyberpunk city at sunrise." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">01 / GENERATION</span></button>
+<button type="button" class="demo-item" data-prompt="A drop of water containing a miniature forest with colorful tiny flower inside." aria-label="View prompt for generated image 2" aria-pressed="false" aria-controls="promptDisplay"><img src="static/files/demo/image2.png" alt="A drop of water containing a miniature forest with colorful tiny flower inside." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">02 / GENERATION</span></button>
+<button type="button" class="demo-item" data-prompt="A transparent glass cube on an endless desert, with a burning candle inside casting shadows on the sand." aria-label="View prompt for generated image 3" aria-pressed="false" aria-controls="promptDisplay"><img src="static/files/demo/image3.png" alt="A transparent glass cube on an endless desert, with a burning candle inside casting shadows on the sand." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">03 / GENERATION</span></button>
+<button type="button" class="demo-item" data-prompt="A vibrant and traditional depiction of Tteokguk, a Korean rice cake soup, served during the Chuseok festival. The image features a steaming bowl of clear broth filled with soft, chewy rice cakes, slices of zucchini, carrots, and green onions, garnished with a sprinkle of sesame seeds. Surrounding the bowl are traditional Korean elements, such as a woven basket with red dates, a small wooden spoon, and a wooden table with a warm, earthy tone. The atmosphere is cozy and festive, with soft, natural lighting and a slightly blurred background to emphasize the dish. The scene captures the essence of Korean culture and the warmth of the Chuseok celebration, with a focus on authenticity and detail." aria-label="View prompt for generated image 4" aria-pressed="false" aria-controls="promptDisplay"><img src="static/files/demo/image4.png" alt="A vibrant and traditional depiction of Tteokguk, a Korean rice cake soup, served during the Chuseok festival. The image features a steaming bowl of clear broth filled with soft, chewy rice cakes, slices of zucchini, carrots, and green onions, garnished with a sprinkle of sesame seeds. Surrounding the bowl are traditional Korean elements, such as a woven basket with red dates, a small wooden spoon, and a wooden table with a warm, earthy tone. The atmosphere is cozy and festive, with soft, natural lighting and a slightly blurred background to emphasize the dish. The scene captures the essence of Korean culture and the warmth of the Chuseok celebration, with a focus on authenticity and detail." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">04 / GENERATION</span></button>
+<button type="button" class="demo-item" data-prompt="An anime-style portrait of a girl with big sparkling eyes, detailed hair highlights, soft gradient background, vibrant colors." aria-label="View prompt for generated image 5" aria-pressed="false" aria-controls="promptDisplay"><img src="static/files/demo/image5.png" alt="An anime-style portrait of a girl with big sparkling eyes, detailed hair highlights, soft gradient background, vibrant colors." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">05 / GENERATION</span></button>
+<button type="button" class="demo-item" data-prompt="A dreamy composition of a young woman with butterflies emerging from her skin, wings glowing in soft golden hues, surreal and enchanting. She is wearing a wedding dress and has white angel wings, waving her hand." aria-label="View prompt for generated image 6" aria-pressed="false" aria-controls="promptDisplay"><img src="static/files/demo/image14.png" alt="A dreamy composition of a young woman with butterflies emerging from her skin, wings glowing in soft golden hues, surreal and enchanting. She is wearing a wedding dress and has white angel wings, waving her hand." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">06 / GENERATION</span></button>
+<button type="button" class="demo-item" data-prompt="A surreal split-face portrait: left side realistic woman with soft skin and a vivid blue eye, right side robotic cyborg with exposed steel plates, fluorescent blue circuits, tiny gears, and a blood-red mechanical eye, cinematic lighting, futuristic and striking." aria-label="View prompt for generated image 7" aria-pressed="false" aria-controls="promptDisplay"><img src="static/files/demo/image15.png" alt="A surreal split-face portrait: left side realistic woman with soft skin and a vivid blue eye, right side robotic cyborg with exposed steel plates, fluorescent blue circuits, tiny gears, and a blood-red mechanical eye, cinematic lighting, futuristic and striking." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">07 / GENERATION</span></button>
+<button type="button" class="demo-item" data-prompt="Photorealistic closeup image of two pirate ships battling each other as they sail inside a cup of coffee." aria-label="View prompt for generated image 8" aria-pressed="false" aria-controls="promptDisplay"><img src="static/files/demo/image16.png" alt="Photorealistic closeup image of two pirate ships battling each other as they sail inside a cup of coffee." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">08 / GENERATION</span></button>
+<button type="button" class="demo-item" data-prompt="A cute handmade felt doll of a little girl standing on a grassy patch. She wears an orange knitted hooded dress with blue buttons and matching boots. The girl is holding a smiling sun-shaped balloon made of felt. Fluffy white clouds with button details float in the sky, and soft green felt trees surround the scene. The style is whimsical, cozy, and playful, with pastel colors and a dreamy, handcrafted aesthetic." aria-label="View prompt for generated image 9" aria-pressed="false" aria-controls="promptDisplay"><img src="static/files/demo/image17.png" alt="A cute handmade felt doll of a little girl standing on a grassy patch. She wears an orange knitted hooded dress with blue buttons and matching boots. The girl is holding a smiling sun-shaped balloon made of felt. Fluffy white clouds with button details float in the sky, and soft green felt trees surround the scene. The style is whimsical, cozy, and playful, with pastel colors and a dreamy, handcrafted aesthetic." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">09 / GENERATION</span></button>
+<button type="button" class="demo-item" data-prompt="The word &#x27;RECA&#x27; is written on a street surface, with the word &#x27;STARTS&#x27; written just below it, surrounded by colorful chalk drawings and playful doodles." aria-label="View prompt for generated image 10" aria-pressed="false" aria-controls="promptDisplay"><img src="static/files/demo/image18.jpeg" alt="The word &#x27;RECA&#x27; is written on a street surface, with the word &#x27;STARTS&#x27; written just below it, surrounded by colorful chalk drawings and playful doodles." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">10 / GENERATION</span></button>
+<button type="button" class="demo-item" data-prompt="A delicate blossom, a symbol of beauty and renewal in Japan, especially during the spring season." aria-label="View prompt for generated image 11" aria-pressed="false" aria-controls="promptDisplay"><img src="static/files/demo/image21.png" alt="A delicate blossom, a symbol of beauty and renewal in Japan, especially during the spring season." loading="lazy" decoding="async" width="1024" height="1024"><span class="image-number mono">11 / GENERATION</span></button></div><div id="promptDisplay" aria-live="polite"><p class="prompt-text">Prompt: A Van Gogh style painting of a cyberpunk city at sunrise.</p></div>
+</div></section>
+<section id="approach" class="section method-section"><div id="abstract" class="wrap">
+<div class="method-lead"><div><p class="section-label eyebrow">02 / Self-supervised post-training</p><h2>The image itself<br>is the supervision.</h2></div><div class="method-copy"><p><strong>Reconstruction Alignment (RecA)</strong> trains a pretrained unified multimodal model to reconstruct an image from its own visual understanding features, using the original image as the target.</p><p>This <strong>semantic reconstruction</strong> objective enables <strong>understanding-to-generation transfer</strong>: better text-to-image generation and image editing, with the model’s original inference interface.</p></div></div>
+<figure class="pipeline"><img src="static/files/teaser/pipeline.jpg" alt="RecA training pipeline: an image is encoded into visual understanding features, which condition the model to reconstruct the original image." loading="lazy" decoding="async"><figcaption>Self-supervised post-training for unified understanding and generation. The reconstruction objective needs no image-specific captions.</figcaption></figure>
+<div class="method-steps"><div class="method-step"><span class="step-number mono">01</span><h3>Understand the image</h3><p>Use the pretrained model’s visual understanding features as the conditioning signal.</p></div><div class="method-step"><span class="step-number mono">02</span><h3>Reconstruct its semantics</h3><p>A semantic information bottleneck encourages learning meaningful visual structure through reconstruction.</p></div><div class="method-step"><span class="step-number mono">03</span><h3>Transfer to generation</h3><p>Use the same inference interface for text-to-image generation and image editing.</p></div></div>
+<p class="training-note"><strong>Training scope.</strong> The reconstruction objective is caption-free. Models with shared understanding and generation parameters also retain image-to-text training to preserve understanding; decoupled understanding components can remain frozen. Evaluated on <strong>Show-o, Harmon, OpenUni, and BAGEL</strong>. <a href="https://github.com/HorizonWind2004/reconstruction-alignment/blob/main/REPRODUCE_GUIDE.md" target="_blank" rel="noopener noreferrer">Architecture-specific training guide ↗</a></p>
+</div></section>
+<section id="motivation" class="section"><div class="wrap motivation-grid">
+<div class="motivation-item"><p class="eyebrow">The supervision gap</p><h3>Images say more than captions.</h3><p>Captions often leave out fine-grained attributes, spatial relationships, and visual details. Visual understanding features offer a denser source of supervision.</p><figure><img src="static/files/teaser/motivation.jpg" alt="Comparison of sparse text-caption supervision with dense visual understanding features." loading="lazy" decoding="async"><figcaption class="figure-caption">Visual features retain information that a text description can omit.</figcaption></figure></div>
+<div class="motivation-item"><p class="eyebrow">The alignment gap</p><h3>Understanding is not yet generation.</h3><p>A unified model can recognize a visual concept yet struggle to generate it. RecA connects these capabilities through semantic reconstruction.</p><figure><img src="static/files/teaser/misalignment.jpg" alt="Yellow broccoli example illustrating a gap between a model’s visual understanding and image generation." loading="lazy" decoding="async"><figcaption class="figure-caption">The paper’s yellow-broccoli example illustrates this mismatch.</figcaption></figure></div>
+</div></section>
+<section id="results" class="section results-section"><div class="wrap">
+<div class="section-heading"><div><p class="eyebrow">03 / Results</p><h2>Better generation.<br>Stronger editing.</h2><p class="section-intro">Improvements across distinct tasks and architectures, using visual understanding for generative model post-training.</p></div></div>
+<div class="result-blocks"><div class="result-block"><h3>Text-to-image generation</h3><p class="model-note">Harmon-1.5B → Harmon-1.5B + RecA</p><div class="metric-row"><span class="metric-name">GenEval ↑</span><span class="metric-value"><span class="before">0.73</span><span class="to">→</span><strong>0.86</strong></span></div><div class="metric-row"><span class="metric-name">DPG-Bench ↑</span><span class="metric-value"><span class="before">80.93</span><span class="to">→</span><strong>87.21</strong></span></div><p class="result-note">A separate <strong>SFT → RecA</strong> recipe using GPT-4o-Image distillation data for supervised fine-tuning reaches <strong>0.90 GenEval / 88.15 DPG-Bench</strong>.</p></div>
+<div class="result-block"><h3>Image editing</h3><p class="model-note">BAGEL → BAGEL + RecA</p><div class="metric-row"><span class="metric-name">ImgEdit ↑</span><span class="metric-value"><span class="before">3.38</span><span class="to">→</span><strong>3.75</strong></span></div><div class="metric-row"><span class="metric-name">GEdit-Bench-EN ↑</span><span class="metric-value"><span class="before">6.94</span><span class="to">→</span><strong>7.27</strong></span></div><p class="result-note">This BAGEL experiment uses <strong>10,000 unlabeled images</strong>, 1,000 training steps, and <strong>27 A100 GPU-hours</strong>.</p></div></div>
+<details class="figure-details"><summary>Full benchmark tables &amp; per-category results</summary><figure><img src="static/files/teaser/main.jpg" alt="Full text-to-image benchmark comparison from the paper, including separate training recipes." loading="lazy" decoding="async"><figcaption>Generation benchmark comparison.</figcaption></figure><figure><img src="static/files/teaser/t2i_result.jpg" alt="Per-category generation scores across Show-o, Harmon, OpenUni, and BAGEL." loading="lazy" decoding="async"><figcaption>Generation results across architectures and evaluation categories.</figcaption></figure><figure><img src="static/files/teaser/edit_result.jpg" alt="BAGEL image-editing results reported in the paper." loading="lazy" decoding="async"><figcaption>Image-editing evaluation.</figcaption></figure></details>
+<a class="results-link" href="https://arxiv.org/html/2509.07295v4" target="_blank" rel="noopener noreferrer">Evaluation protocols &amp; full experiments <span>↗</span></a>
+</div></section>
+<section id="editing" class="section"><div class="wrap"><div class="section-heading"><div class="section-title"><p class="eyebrow">04 / Image editing</p><h2>A new light. A different detail.</h2><p class="section-intro">BAGEL-RecA editing examples. Drag the divider to compare the original image and the edited result.</p></div></div><div class="editing-grid"><figure class="edit-item"><div class="edit-comparison-container"><div class="edit-original"><img src="static/files/edit_demo/ori1.jpg" alt="Original image before: Shed neon light on the scene." loading="lazy" decoding="async"></div><div class="edit-result"><img src="static/files/edit_demo/edit1.png" alt="Edited result: Shed neon light on the scene." loading="lazy" decoding="async"></div><span class="edit-label before">Original</span><span class="edit-label after">RecA</span><div class="edit-slider" aria-hidden="true"></div><input class="edit-range" type="range" min="0" max="100" value="50" aria-label="Compare original and edited image: Shed neon light on the scene."></div><figcaption><span class="mono">01</span><span>Shed neon light on the scene.</span></figcaption></figure>
+<figure class="edit-item"><div class="edit-comparison-container"><div class="edit-original"><img src="static/files/edit_demo/ori2.png" alt="Original image before: Turn on the flashlight on the smartphone." loading="lazy" decoding="async"></div><div class="edit-result"><img src="static/files/edit_demo/edit2.png" alt="Edited result: Turn on the flashlight on the smartphone." loading="lazy" decoding="async"></div><span class="edit-label before">Original</span><span class="edit-label after">RecA</span><div class="edit-slider" aria-hidden="true"></div><input class="edit-range" type="range" min="0" max="100" value="50" aria-label="Compare original and edited image: Turn on the flashlight on the smartphone."></div><figcaption><span class="mono">02</span><span>Turn on the flashlight on the smartphone.</span></figcaption></figure>
+<figure class="edit-item"><div class="edit-comparison-container"><div class="edit-original"><img src="static/files/edit_demo/ori3.png" alt="Original image before: Remove the feather on the hat." loading="lazy" decoding="async"></div><div class="edit-result"><img src="static/files/edit_demo/edit3.png" alt="Edited result: Remove the feather on the hat." loading="lazy" decoding="async"></div><span class="edit-label before">Original</span><span class="edit-label after">RecA</span><div class="edit-slider" aria-hidden="true"></div><input class="edit-range" type="range" min="0" max="100" value="50" aria-label="Compare original and edited image: Remove the feather on the hat."></div><figcaption><span class="mono">03</span><span>Remove the feather on the hat.</span></figcaption></figure>
+<figure class="edit-item"><div class="edit-comparison-container"><div class="edit-original"><img src="static/files/edit_demo/ori4.png" alt="Original image before: A man is wearing the clothes from the reference image." loading="lazy" decoding="async"></div><div class="edit-result"><img src="static/files/edit_demo/edit4.png" alt="Edited result: A man is wearing the clothes from the reference image." loading="lazy" decoding="async"></div><span class="edit-label before">Original</span><span class="edit-label after">RecA</span><div class="edit-slider" aria-hidden="true"></div><input class="edit-range" type="range" min="0" max="100" value="50" aria-label="Compare original and edited image: A man is wearing the clothes from the reference image."></div><figcaption><span class="mono">04</span><span>A man is wearing the clothes from the reference image.</span></figcaption></figure>
+<figure class="edit-item"><div class="edit-comparison-container"><div class="edit-original"><img src="static/files/edit_demo/ori5.png" alt="Original image before: Add strawberries, blueberries, and banana slices on top of the pancake stack." loading="lazy" decoding="async"></div><div class="edit-result"><img src="static/files/edit_demo/edit5.png" alt="Edited result: Add strawberries, blueberries, and banana slices on top of the pancake stack." loading="lazy" decoding="async"></div><span class="edit-label before">Original</span><span class="edit-label after">RecA</span><div class="edit-slider" aria-hidden="true"></div><input class="edit-range" type="range" min="0" max="100" value="50" aria-label="Compare original and edited image: Add strawberries, blueberries, and banana slices on top of the pancake stack."></div><figcaption><span class="mono">05</span><span>Add strawberries, blueberries, and banana slices on top of the pancake stack.</span></figcaption></figure>
+<figure class="edit-item"><div class="edit-comparison-container"><div class="edit-original"><img src="static/files/edit_demo/ori6.png" alt="Original image before: Change the gingerbread cookies into soft plush toy figures, with fuzzy fabric texture." loading="lazy" decoding="async"></div><div class="edit-result"><img src="static/files/edit_demo/edit6.png" alt="Edited result: Change the gingerbread cookies into soft plush toy figures, with fuzzy fabric texture." loading="lazy" decoding="async"></div><span class="edit-label before">Original</span><span class="edit-label after">RecA</span><div class="edit-slider" aria-hidden="true"></div><input class="edit-range" type="range" min="0" max="100" value="50" aria-label="Compare original and edited image: Change the gingerbread cookies into soft plush toy figures, with fuzzy fabric texture."></div><figcaption><span class="mono">06</span><span>Change the gingerbread cookies into soft plush toy figures, with fuzzy fabric texture.</span></figcaption></figure></div><p class="editing-note">Keyboard: focus a comparison and use the arrow keys. <a href="https://huggingface.co/spaces/sanaka87/BAGEL-RecA" target="_blank" rel="noopener noreferrer">Try BAGEL-RecA ↗</a></p></div></section>
+<section id="citation" class="citation-section"><div class="wrap citation-layout"><div class="citation-intro"><p class="section-label eyebrow">05 / Citation</p><h2>Build on this work.</h2><p>If RecA is useful for your research, please cite our ICLR 2026 paper. <a href="paper.html" class="text-link">Abstract &amp; publication details ↗</a></p></div><div><div class="citation-actions"><a href="citation.bib" download>BibTeX ↓</a><button type="button" id="copy-citation" class="copy-button">Copy citation</button></div><pre><code id="bibtex">@inproceedings{xie2026reconstruction,
+  title={Reconstruction alignment improves unified multimodal models},
+  author={Xie, Ji and Zettlemoyer, Luke and Wang, Xudong and others},
+  booktitle={International Conference on Learning Representations},
+  volume={2026},
+  pages={120095--120137},
+  year={2026}
+}</code></pre><p id="citation-status" role="status" aria-live="polite"></p></div></div></section>
+</main>
+<footer class="site-footer"><div class="wrap"><div class="footer-row"><p>RecA · ICLR 2026</p><div class="footer-links"><a href="https://github.com/HorizonWind2004/reconstruction-alignment" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://alphaxiv.org/abs/2509.07295" target="_blank" rel="noopener noreferrer">Discuss on alphaXiv ↗</a><a href="#top">Back to top ↑</a></div><p>© 2026 RecA authors</p></div><details class="visitor-stats" open><summary>Visitors</summary><div class="visitor-map"><script id="mapmyvisitors" src="https://mapmyvisitors.com/map.js?d=t6_y_-P92Qv5pi9EBxNDzlrcHpOseilvqHHLQLA87CQ&amp;cl=ffffff&amp;w=a" async></script></div></details></div></footer>
+<button type="button" id="back-to-top" class="opacity-0 invisible" aria-label="Back to top">↑</button>
+<script id="page-interactions">
+'use strict';
 
-  <!-- Hero Section with Demo Background -->
-  <section class="hero-pattern py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hero-content">
-      <div class="text-center">
-        <div class="flex justify-center items-center mb-6">
-          <img src="static/files/teaser/logo.png" alt="RecA Logo" class="h-20 w-20 mr-4 animate-float">
-          <h1 class="text-4xl md:text-5xl font-bold text-white text-shadow">
-            <span class="gradient-text">RecA</span>: Reconstruction Alignment Improves Unified Multimodal Models
-          </h1>
-        </div>
-        <h2 class="mt-4 text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto text-shadow">
-          Unlocking the Massive Zero-shot Potential in Unified Multimodal Models through Self-supervised Learning
-        </h2>
-        
-        <!-- Authors -->
-        <div class="mt-8 flex flex-wrap justify-center gap-6">
-          <div class="bg-white/90 rounded-lg shadow-sm px-8 py-4 flex items-center backdrop-blur-sm">
-            <div class="text-center">
-              <p class="text-base font-medium text-gray-700">
-                <a target="_blank" href="https://horizonwind2004.github.io/" class="text-primary-600 hover:text-primary-800 transition">Ji Xie</a><sup>1</sup>
-              </p>
-              <p class="text-sm text-gray-500">UC Berkeley</p>
-            </div>
-          </div>
-          <div class="bg-white/90 rounded-lg shadow-sm px-8 py-4 flex items-center backdrop-blur-sm">
-            <div class="text-center">
-              <p class="text-base font-medium text-gray-700">
-                <a target="_blank" href="https://people.eecs.berkeley.edu/~trevor/" class="text-primary-600 hover:text-primary-800 transition">Trevor Darrell</a><sup>1</sup>
-              </p>
-              <p class="text-sm text-gray-500">UC Berkeley</p>
-            </div>
-          </div>
-          <div class="bg-white/90 rounded-lg shadow-sm px-8 py-4 flex items-center backdrop-blur-sm">
-            <div class="text-center">
-              <p class="text-base font-medium text-gray-700">
-                <a target="_blank" href="https://homes.cs.washington.edu/~lsz/" class="text-primary-600 hover:text-primary-800 transition">Luke Zettlemoyer</a><sup>2</sup>
-              </p>
-              <p class="text-sm text-gray-500">University of Washington</p>
-            </div>
-          </div>
-          <div class="bg-white/90 rounded-lg shadow-sm px-8 py-4 flex items-center backdrop-blur-sm">
-            <div class="text-center">
-              <p class="text-base font-medium text-gray-700">
-                <a target="_blank" href="https://people.eecs.berkeley.edu/~xdwang/" class="text-primary-600 hover:text-primary-800 transition">XuDong Wang</a><sup>1*</sup>
-              </p>
-              <p class="text-sm text-gray-500">UC Berkeley</p>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Links -->
-        <div class="mt-10 flex flex-wrap justify-center gap-4">
-          <a href="https://arxiv.org/pdf/2509.07295" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 transition">
-            <i class="fas fa-file-pdf mr-2"></i> Paper (PDF)
-          </a>
-          <a href="https://alphaxiv.org/abs/2509.07295" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gray-800 hover:bg-gray-700 transition">
-            <i class="fas fa-book-open mr-2"></i> ArXiv
-          </a>
-          <a href="https://github.com/HorizonWind2004/reconstruction-alignment" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gray-800 hover:bg-gray-700 transition">
-            <i class="fab fa-github mr-2"></i> Code
-          </a>
-          <a href="https://huggingface.co/collections/sanaka87/reca-68ad2176380355a3dcedc068" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-yellow-600 hover:bg-yellow-700 transition">
-            <i class="fas fa-robot mr-2"></i> HF Models
-          </a>
-          <a href="https://huggingface.co/spaces/sanaka87/BAGEL-RecA" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 transition">
-            <i class="fas fa-play-circle mr-2"></i> Demo (BAGEL)
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const scrollBehavior = () => reducedMotion.matches ? 'auto' : 'smooth';
+const menuToggle = document.getElementById('menu-toggle');
+const navLinks = document.getElementById('nav-links');
 
-  <!-- Demo Section - Updated with Auto-scrolling Gallery -->
-  <section id="demo" class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900"> Gallery</h2>
-        <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-          Click on images to see their generation prompts below
-        </p>
-      </div>
-      
-      <div class="demo-gallery-container">
-        <!-- Gallery Navigation Buttons -->
-        <button id="galleryPrevBtn" class="gallery-nav-button gallery-nav-left" aria-label="Previous images">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button id="galleryNextBtn" class="gallery-nav-button gallery-nav-right" aria-label="Next images">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-        
-        <div class="demo-gallery" id="demoGallery">
+// Without JavaScript the navigation stays visible, including on small screens.
+menuToggle.hidden = false;
+navLinks.classList.add('is-collapsible');
+function closeMenu() {
+  menuToggle.setAttribute('aria-expanded', 'false');
+  navLinks.classList.remove('is-open');
+}
+menuToggle.addEventListener('click', () => {
+  const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+  menuToggle.setAttribute('aria-expanded', String(!isOpen));
+  navLinks.classList.toggle('is-open', !isOpen);
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') {
+    closeMenu();
+    menuToggle.focus();
+  }
+});
 
-          <div class="demo-item" data-prompt="A Van Gogh style painting of a cyberpunk city at sunrise.">
-            <img src="static/files/demo/image1.jpg" alt="">
-          </div>
-          <div class="demo-item" data-prompt="A drop of water containing a miniature forest with colorful tiny flower inside.">
-            <img src="static/files/demo/image2.png" alt="">
-          </div>
-          <div class="demo-item" data-prompt="A transparent glass cube on an endless desert, with a burning candle inside casting shadows on the sand.">
-            <img src="static/files/demo/image3.png" alt="">
-          </div>
-          <div class="demo-item" data-prompt="A vibrant and traditional depiction of Tteokguk, a Korean rice cake soup, served during the Chuseok festival. The image features a steaming bowl of clear broth filled with soft, chewy rice cakes, slices of zucchini, carrots, and green onions, garnished with a sprinkle of sesame seeds. Surrounding the bowl are traditional Korean elements, such as a woven basket with red dates, a small wooden spoon, and a wooden table with a warm, earthy tone. The atmosphere is cozy and festive, with soft, natural lighting and a slightly blurred background to emphasize the dish. The scene captures the essence of Korean culture and the warmth of the Chuseok celebration, with a focus on authenticity and detail.">
-            <img src="static/files/demo/image4.png" alt="">
-          </div>
-          <div class="demo-item" data-prompt="An anime-style portrait of a girl with big sparkling eyes, detailed hair highlights, soft gradient background, vibrant colors.">
-            <img src="static/files/demo/image5.png" alt="">
-          </div>
-          <div class="demo-item" data-prompt="A dreamy composition of a young woman with butterflies emerging from her skin, wings glowing in soft golden hues, surreal and enchanting. She is wearing a wedding dress and has white angel wings, waving her hand.">
-            <img src="static/files/demo/image14.png" alt="">
-          </div>
-          <div class="demo-item" data-prompt="A surreal split-face portrait: left side realistic woman with soft skin and a vivid blue eye, right side robotic cyborg with exposed steel plates, fluorescent blue circuits, tiny gears, and a blood-red mechanical eye, cinematic lighting, futuristic and striking.">
-            <img src="static/files/demo/image15.png" alt="">
-          </div>
-          <div class="demo-item" data-prompt="Photorealistic closeup image of two pirate ships battling each other as they sail inside a cup of coffee.">
-            <img src="static/files/demo/image16.png" alt="">
-          </div>
-          <div class="demo-item" data-prompt="A cute handmade felt doll of a little girl standing on a grassy patch. She wears an orange knitted hooded dress with blue buttons and matching boots. The girl is holding a smiling sun-shaped balloon made of felt. Fluffy white clouds with button details float in the sky, and soft green felt trees surround the scene. The style is whimsical, cozy, and playful, with pastel colors and a dreamy, handcrafted aesthetic.">
-            <img src="static/files/demo/image17.png" alt="">
-          </div>
-          <div class="demo-item" data-prompt="The word 'RECA' is written on a street surface, with the word 'STARTS' written just below it, surrounded by colorful chalk drawings and playful doodles.">
-            <img src="static/files/demo/image18.jpeg" alt="">
-          </div>
-          <div class="demo-item" data-prompt="A delicate blossom, a symbol of beauty and renewal in Japan, especially during the spring season.">
-            <img src="static/files/demo/image21.png" alt="">
-          </div>
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', event => {
+    const id = anchor.getAttribute('href').slice(1);
+    const destination = document.getElementById(id);
+    if (!destination) return;
+    event.preventDefault();
+    closeMenu();
+    history.pushState(null, '', `#${id}`);
+    destination.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
+    destination.setAttribute('tabindex', '-1');
+    destination.focus({ preventScroll: true });
+  });
+});
 
-        </div>
-        
-        <!-- Prompt Display Area -->
-        <div class="demo-prompt-display" id="promptDisplay">
-          <div class="prompt-text">Click on any image above to see its generation prompt</div>
-        </div>
-      </div>
-      
-      <!-- <div class="mt-8 text-center">
-        <a href="https://huggingface.co/spaces/sanaka87/BAGEL-RecA" target="_blank" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 transition">
-          <i class="fas fa-play-circle mr-2"></i> Try the Live Demo
-        </a>
-      </div> -->
-    </div>
-  </section>
+const backToTop = document.getElementById('back-to-top');
+function updateBackToTop() {
+  const visible = window.scrollY > 300;
+  backToTop.classList.toggle('opacity-0', !visible);
+  backToTop.classList.toggle('invisible', !visible);
+}
+window.addEventListener('scroll', updateBackToTop, { passive: true });
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: scrollBehavior() });
+  document.querySelector('.nav-brand').focus({ preventScroll: true });
+});
+updateBackToTop();
 
-  <!-- Edit Demo Section -->
-  <section class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900">Interactive Editing Results</h2>
-        <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-          Drag the slider to compare original images with their edited versions
-        </p>
-      </div>
-      
-      <div class="edit-grid">
-        <!-- Edit Demo 1 -->
-        <div class="bg-white rounded-xl shadow-md p-6">
-          <div class="edit-comparison-container" data-edit-id="1">
-            <div class="edit-comparison-images">
-              <div class="edit-original">
-                <img src="static/files/edit_demo/ori1.jpg" alt="Original Image 1">
-              </div>
-              <div class="edit-result">
-                <img src="static/files/edit_demo/edit1.png" alt="Edited Image 1">
-              </div>
-              <div class="edit-slider"></div>
-              <div class="edit-labels">
-                <div class="edit-label">Original</div>
-                <div class="edit-label">Edited</div>
-              </div>
-            </div>
-          </div>
-          <div class="edit-prompt-area">
-            <div class="prompt-label">Edit Prompt:</div>
-            <div class="prompt-text">Shed neon light on the scene.</div>
-          </div>
-        </div>
+const gallery = document.getElementById('demoGallery');
+const items = [...gallery.querySelectorAll('.demo-item')];
+const promptText = document.querySelector('#promptDisplay .prompt-text');
+const previous = document.getElementById('galleryPrevBtn');
+const next = document.getElementById('galleryNextBtn');
+function updateGalleryButtons() {
+  previous.disabled = gallery.scrollLeft <= 1;
+  next.disabled = gallery.scrollLeft >= gallery.scrollWidth - gallery.clientWidth - 1;
+}
+function scrollGallery(direction) {
+  const gap = parseFloat(getComputedStyle(gallery).gap) || 0;
+  gallery.scrollBy({ left: direction * (items[0].getBoundingClientRect().width + gap), behavior: scrollBehavior() });
+}
+previous.addEventListener('click', () => scrollGallery(-1));
+next.addEventListener('click', () => scrollGallery(1));
+gallery.addEventListener('scroll', updateGalleryButtons, { passive: true });
+window.addEventListener('resize', updateGalleryButtons);
+function selectImage(selected) {
+  items.forEach(item => {
+    const active = item === selected;
+    item.classList.toggle('active', active);
+    item.setAttribute('aria-pressed', String(active));
+  });
+  // Prompts are plain text, never interpolated as markup.
+  promptText.textContent = `Prompt: ${selected.dataset.prompt}`;
+}
+items.forEach(item => item.addEventListener('click', () => selectImage(item)));
+selectImage(items[0]);
+updateGalleryButtons();
 
-        <!-- Edit Demo 2 -->
-        <div class="bg-white rounded-xl shadow-md p-6">
-          <div class="edit-comparison-container" data-edit-id="2">
-            <div class="edit-comparison-images">
-              <div class="edit-original">
-                <img src="static/files/edit_demo/ori2.png" alt="Original Image 2">
-              </div>
-              <div class="edit-result">
-                <img src="static/files/edit_demo/edit2.png" alt="Edited Image 2">
-              </div>
-              <div class="edit-slider"></div>
-              <div class="edit-labels">
-                <div class="edit-label">Original</div>
-                <div class="edit-label">Edited</div>
-              </div>
-            </div>
-          </div>
-          <div class="edit-prompt-area">
-            <div class="prompt-label">Edit Prompt:</div>
-            <div class="prompt-text">Turn on the flashlight on the smartphone.</div>
-          </div>
-        </div>
+document.querySelectorAll('.edit-comparison-container').forEach(container => {
+  const range = container.querySelector('.edit-range');
+  const divider = container.querySelector('.edit-slider');
+  const edited = container.querySelector('.edit-result');
+  const update = () => {
+    const percentage = Math.max(0, Math.min(100, Number(range.value)));
+    divider.style.left = `${percentage}%`;
+    edited.style.clipPath = `inset(0 0 0 ${percentage}%)`;
+    range.setAttribute('aria-valuetext', `${percentage}% original image`);
+  };
+  range.addEventListener('input', update);
+  update();
+});
 
-        <!-- Edit Demo 3 -->
-        <div class="bg-white rounded-xl shadow-md p-6">
-          <div class="edit-comparison-container" data-edit-id="3">
-            <div class="edit-comparison-images">
-              <div class="edit-original">
-                <img src="static/files/edit_demo/ori3.png" alt="Original Image 3">
-              </div>
-              <div class="edit-result">
-                <img src="static/files/edit_demo/edit3.png" alt="Edited Image 3">
-              </div>
-              <div class="edit-slider"></div>
-              <div class="edit-labels">
-                <div class="edit-label">Original</div>
-                <div class="edit-label">Edited</div>
-              </div>
-            </div>
-          </div>
-          <div class="edit-prompt-area">
-            <div class="prompt-label">Edit Prompt:</div>
-            <div class="prompt-text">Remove the feather on the hat.</div>
-          </div>
-        </div>
-
-        <!-- Edit Demo 4 -->
-        <div class="bg-white rounded-xl shadow-md p-6">
-          <div class="edit-comparison-container" data-edit-id="4">
-            <div class="edit-comparison-images">
-              <div class="edit-original">
-                <img src="static/files/edit_demo/ori4.png" alt="Original Image 4">
-              </div>
-              <div class="edit-result">
-                <img src="static/files/edit_demo/edit4.png" alt="Edited Image 4">
-              </div>
-              <div class="edit-slider"></div>
-              <div class="edit-labels">
-                <div class="edit-label">Original</div>
-                <div class="edit-label">Edited</div>
-              </div>
-            </div>
-          </div>
-          <div class="edit-prompt-area">
-            <div class="prompt-label">Edit Prompt:</div>
-            <div class="prompt-text">A man is wearing the clothes from the reference image.</div>
-          </div>
-        </div>
-
-        <!-- Edit Demo 5 -->
-        <div class="bg-white rounded-xl shadow-md p-6">
-          <div class="edit-comparison-container" data-edit-id="5">
-            <div class="edit-comparison-images">
-              <div class="edit-original">
-                <img src="static/files/edit_demo/ori5.png" alt="Original Image 5">
-              </div>
-              <div class="edit-result">
-                <img src="static/files/edit_demo/edit5.png" alt="Edited Image 5">
-              </div>
-              <div class="edit-slider"></div>
-              <div class="edit-labels">
-                <div class="edit-label">Original</div>
-                <div class="edit-label">Edited</div>
-              </div>
-            </div>
-          </div>
-          <div class="edit-prompt-area">
-            <div class="prompt-label">Edit Prompt:</div>
-            <div class="prompt-text">Add strawberries, blueberries, and banana slices on top of the pancake stack.</div>
-          </div>
-        </div>
-
-        <!-- Edit Demo 6 -->
-        <div class="bg-white rounded-xl shadow-md p-6">
-          <div class="edit-comparison-container" data-edit-id="6">
-            <div class="edit-comparison-images">
-              <div class="edit-original">
-                <img src="static/files/edit_demo/ori6.png" alt="Original Image 6">
-              </div>
-              <div class="edit-result">
-                <img src="static/files/edit_demo/edit6.png" alt="Edited Image 6">
-              </div>
-              <div class="edit-slider"></div>
-              <div class="edit-labels">
-                <div class="edit-label">Original</div>
-                <div class="edit-label">Edited</div>
-              </div>
-            </div>
-          </div>
-          <div class="edit-prompt-area">
-            <div class="prompt-label">Edit Prompt:</div>
-            <div class="prompt-text">Change the gingerbread cookies into soft plush toy figures, with fuzzy fabric texture.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Abstract Section -->
-  <section id="abstract" class="py-20 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900">Abstract</h2>
-        <div class="mt-4 h-1 w-20 bg-primary-600 mx-auto"></div>
-      </div>
-      
-      <div class="bg-white rounded-xl shadow-md p-8 max-w-5xl mx-auto">
-        <div class="prose-lg text-gray-700">
-          <p class="mb-6">
-            Unified multimodal models (UMMs) unify visual understanding and generation within a single architecture. However, conventional training relies on image–text pairs (or sequences) whose captions are typically sparse and miss fine-grained visual details—even when they use hundreds of words to describe a simple image.
-          </p>
-          <p class="mb-6">
-            We introduce <span class="font-bold text-primary-600">Reconstruction Alignment</span> (<span class="font-bold text-primary-600">RecA</span>), a resource-efficient post-training method that leverages visual understanding encoder embeddings as dense "text prompts," providing rich supervision without captions. Concretely, RecA conditions a UMM on its own visual understanding embeddings and optimizes it to reconstruct the input image with a self-supervised reconstruction loss, thereby realigning understanding and generation. <span class="font-medium text-green-600">Importantly, RecA does not require any image-to-text paired data</span>, relying purely on image reconstruction for training.
-          </p>
-          <p class="mb-6">
-            Despite its simplicity, RecA is broadly applicable: across autoregressive, masked-autoregressive, and diffusion-based UMMs, it consistently improves generation and editing fidelity. With only <span class="font-bold text-primary-600">27 GPU-hours</span>, post-training with RecA substantially improves image generation performance on GenEval (<span class="font-bold text-primary-600">0.73→0.90</span>) and DPGBench (<span class="font-bold text-primary-600">80.93→88.15</span>), while also boosting editing benchmarks (ImgEdit <span class="font-bold text-primary-600">3.38→3.75</span>, GEdit <span class="font-bold text-primary-600">6.94→7.25</span>).
-          </p>
-          <p>
-            Notably, RecA surpasses much larger open-source models and applies broadly across diverse UMM architectures, establishing it as an efficient and general post-training alignment strategy for UMMs.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Motivation Section -->
-  <section id="motivation" class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900">Motivation: What's Wrong With Text Supervision?</h2>
-        <div class="mt-4 h-1 w-20 bg-primary-600 mx-auto"></div>
-      </div>
-
-      <!-- Motivation Figure -->
-      <div class="bg-gray-50 rounded-xl shadow-md p-8 max-w-6xl mx-auto mb-12">
-        <img src="static/files/teaser/motivation.jpg" alt="Dense supervision from visual embeddings vs. sparse text captions" class="w-full h-auto rounded-lg">
-        <div class="text-center mt-4">
-          <p class="text-sm text-gray-600 font-medium">
-            <strong>Dense supervision from visual embeddings.</strong> 
-            (a) Typical image generation models are trained on image-caption pairs where text provides only sparse supervision. 
-            (b) By contrast, embeddings from visual understanding encoders preserve richer and more faithful semantics.
-          </p>
-        </div>
-      </div>
-
-      <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-        <!-- The Problem: Sparse Text Supervision -->
-        <div class="bg-gray-50 rounded-xl shadow-md p-8">
-          <div class="flex items-start">
-            <div class="flex-shrink-0">
-              <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
-              </div>
-            </div>
-            <div class="ml-6">
-              <h3 class="text-xl font-semibold text-gray-800 mb-4">The Challenge: Sparse Text Supervision</h3>
-              <div class="space-y-4 text-gray-700">
-                <p>
-                  Conventional training of Unified Multimodal Models (UMMs) relies on <span class="font-medium text-red-600">image-text pairs</span>, where captions provide supervision. However, even captions spanning hundreds of words omit critical visual details:
-                </p>
-                <ul class="list-disc list-inside space-y-2 text-sm">
-                  <li><span class="font-medium">Spatial layout</span> and geometric structure</li>
-                  <li><span class="font-medium">Fine-grained attributes</span> like textures and styles</li>
-                  <li><span class="font-medium">Precise object shapes</span> and orientations</li>
-                  <li><span class="font-medium">Exact color distributions</span> and lighting</li>
-                </ul>
-                <div class="bg-red-50 border-l-4 border-red-400 p-4 mt-6">
-                  <div class="flex">
-                    <div class="flex-shrink-0">
-                      <i class="fas fa-quote-left text-red-400"></i>
-                    </div>
-                    <div class="ml-3">
-                      <p class="text-sm italic text-red-700">
-                        "An image is worth far more than a hundred words" — even lengthy captions miss key aspects, leading to biased correlations like <em>broccoli → green</em>.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- The Solution: Dense Visual Embeddings -->
-        <div class="bg-gray-50 rounded-xl shadow-md p-8">
-          <div class="flex items-start">
-            <div class="flex-shrink-0">
-              <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <i class="fas fa-lightbulb text-green-600 text-xl"></i>
-              </div>
-            </div>
-            <div class="ml-6">
-              <h3 class="text-xl font-semibold text-gray-800 mb-4">Our Solution: Dense Visual Supervision</h3>
-              <div class="space-y-4 text-gray-700">
-                <p>
-                  Instead of relying on sparse text captions, we leverage <span class="font-medium text-green-600">visual understanding encoder embeddings</span> that map pixels into a language-aligned semantic space:
-                </p>
-                <ul class="list-disc list-inside space-y-2 text-sm">
-                  <li><span class="font-medium">Semantic embeddings</span> from CLIP, SigLIP preserve richer details</li>
-                  <li><span class="font-medium">Dense supervision</span> without paired captions</li>
-                  <li><span class="font-medium">Language-aligned</span> and interpretable by UMMs</li>
-                  <li><span class="font-medium">Captures layout, color, attributes</span> beyond text descriptions</li>
-                </ul>
-                <div class="bg-green-50 border-l-4 border-green-400 p-4 mt-6">
-                  <div class="flex">
-                    <div class="flex-shrink-0">
-                      <i class="fas fa-question-circle text-green-400"></i>
-                    </div>
-                    <div class="ml-3">
-                      <p class="text-sm italic text-green-700">
-                        <em>Can we improve generation capabilities by training UMMs with semantic embeddings as maximally informative "visual prompts"?</em>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- The Misalignment Problem -->
-      <div class="mt-12 bg-yellow-50 rounded-xl shadow-md p-8 max-w-5xl mx-auto">
-        <div class="text-center mb-6">
-          <h3 class="text-2xl font-semibold text-gray-800">Understanding vs. Generation Misalignment</h3>
-        </div>
-        
-        <!-- Misalignment Example Image -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-8 max-w-3xl mx-auto">
-          <img src="static/files/teaser/misalignment.jpg" alt="Yellow broccoli misalignment example" class="w-full h-auto rounded-lg">
-          <div class="text-center mt-4">
-            <p class="text-sm text-gray-600">
-              <strong>Example:</strong> UMMs can often correctly recognize an uncommon concept (yellow broccoli) but fail to generate it, revealing misalignment between understanding and generation.
-            </p>
-          </div>
-        </div>
-        
-        <div class="flex flex-col md:flex-row items-center gap-8">
-          <div class="flex-1">
-            <div class="bg-white rounded-lg p-6 shadow-sm">
-              <div class="text-center">
-                <div class="w-20 h-20 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                  <i class="fas fa-eye text-blue-600 text-2xl"></i>
-                </div>
-                <h4 class="font-semibold text-gray-800 mb-2">Understanding</h4>
-                <p class="text-sm text-gray-600">✅ Can recognize "yellow broccoli"</p>
-              </div>
-            </div>
-          </div>
-          <div class="flex-shrink-0">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-              <i class="fas fa-times text-red-600 text-2xl"></i>
-            </div>
-          </div>
-          <div class="flex-1">
-            <div class="bg-white rounded-lg p-6 shadow-sm">
-              <div class="text-center">
-                <div class="w-20 h-20 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
-                  <i class="fas fa-paint-brush text-red-600 text-2xl"></i>
-                </div>
-                <h4 class="font-semibold text-gray-800 mb-2">Generation</h4>
-                <p class="text-sm text-gray-600">❌ Fails to generate "yellow broccoli"</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="mt-6 text-center">
-          <p class="text-gray-700">
-            <span class="font-medium">The Gap:</span> UMMs often understand concepts they cannot generate, revealing fundamental misalignment between understanding and generation pathways.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Approach Section -->
-  <section id="approach" class="py-20 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900">RecA: Semantic-Level Image Reconstruction</h2>
-        <div class="mt-4 h-1 w-20 bg-primary-600 mx-auto"></div>
-      </div>
-      
-      <!-- Key Training Advantage -->
-      <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl shadow-md p-8 max-w-6xl mx-auto mb-12">
-        <div class="text-center">
-          <div class="flex justify-center items-center mb-4">
-            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-              <i class="fas fa-check-circle text-green-600 text-2xl"></i>
-            </div>
-            <h3 class="text-2xl font-semibold text-gray-800">Training Without Image-to-Text Data</h3>
-          </div>
-          <p class="text-lg text-gray-700 max-w-4xl mx-auto">
-            <span class="font-bold text-green-600">RecA requires NO image-to-text paired data for training.</span> 
-            Instead, we use pure <span class="font-medium text-blue-600">image-to-image reconstruction</span> with understanding visual embeddings as supervision. This eliminates the dependency on captioned datasets and the limitations of sparse textual descriptions.
-          </p>
-        </div>
-      </div>
-
-      <!-- Pipeline Overview -->
-      <div class="bg-white rounded-xl shadow-md p-8 max-w-6xl mx-auto">
-        <div class="mb-8">
-          <img src="static/files/teaser/pipeline.jpg" alt="RecA Pipeline Overview" class="w-full h-auto rounded-lg shadow-sm">
-          <div class="text-center mt-4">
-            <p class="text-sm text-gray-600">
-              <strong>RecA Pipeline:</strong> At inference time, RecA requires no additional inputs beyond the text prompt, operating exactly like a standard UMM.
-            </p>
-          </div>
-        </div>
-        
-        <div class="prose-lg text-gray-700">
-          <p class="mb-6">
-            <span class="font-semibold text-gray-800">Overview of the semantic reconstruction realignment (RecA) pipeline.</span>
-            A visual <span class="italic">understanding</span> encoder (<span class="italic">e.g.</span>, CLIP or DINO) extracts semantic features from the input image, which are fused with template text embeddings and passed to a Unified Multimodal Model (UMM) to regenerate the image.
-          </p>
-          <p class="mb-6">
-            RecA implements a <span class="font-medium text-primary-600">self-supervised training paradigm</span> where the UMM is optimized with a reconstruction loss (diffusion or cross-entropy) between the original and reconstructed images. This approach provides dense supervision that preserves almost all fine-grained details that captions omit.
-          </p>
-          
-          <!-- Training Details -->
-          <div class="bg-gray-50 border-l-4 border-gray-300 p-6 rounded-r-lg mb-6">
-            <h4 class="font-semibold text-gray-900 mb-4 text-center">Training Configuration Details</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-                <div class="text-center mb-3">
-                  <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <span class="text-white font-bold text-sm">1</span>
-                  </div>
-                  <h5 class="font-bold text-gray-800 text-sm">Encoder Freezing</h5>
-                </div>
-                <p class="text-xs text-gray-700 leading-relaxed">
-                  We <span class="font-bold">freeze the visual understanding encoder</span> in most cases, except when the UMM employs the same encoder for both tasks (e.g., <span class="font-bold">Harmon with MAE</span>).
-                </p>
-              </div>
-              
-              <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-                <div class="text-center mb-3">
-                  <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <span class="text-white font-bold text-sm">2</span>
-                  </div>
-                  <h5 class="font-bold text-gray-800 text-sm">Parameter Sharing</h5>
-                </div>
-                <p class="text-xs text-gray-700 leading-relaxed">
-                  For UMMs that <span class="font-bold">share parameters between understanding and generation</span>, we preserve <span class="font-bold">image-to-text capability with LLaVA data</span>; otherwise, we <span class="font-bold">freeze understanding entirely</span>.
-                </p>
-              </div>
-              
-              <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-                <div class="text-center mb-3">
-                  <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <span class="text-white font-bold text-sm">3</span>
-                  </div>
-                  <h5 class="font-bold text-gray-800 text-sm">Data Strategy</h5>
-                </div>
-                <p class="text-xs text-gray-700 leading-relaxed">
-                  We <span class="font-bold">do not use text-to-image data</span>. RecA relies purely on <span class="font-bold">image reconstruction</span> with understanding visual embeddings as supervision.
-                </p>
-              </div>
-              
-              <div class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-                <div class="text-center mb-3">
-                  <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <span class="text-white font-bold text-sm">4</span>
-                  </div>
-                  <h5 class="font-bold text-gray-800 text-sm">Image Preprocessing</h5>
-                </div>
-                <p class="text-xs text-gray-700 leading-relaxed">
-                  Input images are <span class="font-bold">resized to minimum resolution</span> accepted by the visual encoder (e.g., <span class="font-bold">224×224 for SigLIP</span>).
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Key Benefits Grid -->
-          <div class="grid md:grid-cols-2 gap-6 mt-8">
-            <div class="bg-gray-50 rounded-lg p-6">
-              <div class="flex items-start">
-                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1">
-                  <i class="fas fa-image text-blue-600"></i>
-                </div>
-                <div>
-                  <h4 class="font-semibold text-gray-800 mb-2">Self-Supervised Training</h4>
-                  <p class="text-sm text-gray-600">Pure image reconstruction without relying on text captions or paired data.</p>
-                </div>
-              </div>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-6">
-              <div class="flex items-start">
-                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-1">
-                  <i class="fas fa-brain text-green-600"></i>
-                </div>
-                <div>
-                  <h4 class="font-semibold text-gray-800 mb-2">Understanding Visual Embeddings</h4>
-                  <p class="text-sm text-gray-600">Dense visual features are extracted from understanding encoders (CLIP, SigLIP, etc.) as "visual prompts", not from generation encoders (VAE). </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Results Section -->
-  <section id="results" class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900">State-of-the-Art Performance</h2>
-        <div class="mt-4 h-1 w-20 bg-primary-600 mx-auto"></div>
-      </div>
-      
-      <div class="bg-gray-50 rounded-xl shadow-md p-8 max-w-5xl mx-auto">
-        <div class="prose-lg text-gray-700">
-          <p class="mb-6">
-            After only a few training steps, all models post large <span class="font-bold text-primary-600">zero-shot</span> gains in generation capability with <span class="italic">no loss in vision-understanding accuracy</span>. Our fine-tuned Harmon model, even with just 1.5B parameters, achieves a high score of <span class="font-bold text-primary-600">0.86</span> on GenEval and <span class="font-bold text-primary-600">87.21</span> on DPGBench, significantly outperforming the previous state-of-the-art models <span class="font-bold">without any GPT-4o-Image distillation data or reinforcement learning</span>.
-          </p>
-          <p>
-            The most effective approach is a <span class="italic">two-stage strategy</span>: first applying SFT followed by reconstruction tuning, which achieves <span class="font-bold text-primary-600">0.90</span> on GenEval and <span class="font-bold text-primary-600">88.15</span> on DPGBench.
-          </p>
-        </div>
-        
-        <div class="mt-10">
-          <img src="static/files/teaser/main.jpg" alt="Table 1: Benchmark Comparison" class="w-full h-auto rounded-lg shadow-sm">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Generalizability Section -->
-  <section class="py-20 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900">Enhanced Generalizability</h2>
-        <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-          Across Different Architectures and Tasks
-        </p>
-      </div>
-      
-      <div class="bg-white rounded-xl shadow-md p-8 max-w-5xl mx-auto">
-        <div class="prose-lg text-gray-700">
-          <p class="mb-6">
-            RecA achieves consistent performance gains across different UMM frameworks, showcasing its generalizability. We apply RecA to various unified multimodal models including Show-o (AR), Harmon (AR+MAR), OpenUni (AR+Diffusion), and BAGEL (AR+Diffusion).
-          </p>
-          <p class="mb-6">
-            All models demonstrate significant improvements through RecA: the most notable improvement is achieved by Harmon-1.5B with 85.7 GenEval score (+12.8). Our method exhibits the most significant gains in <span class="font-medium">Position</span> and <span class="font-medium">Color Attribution</span> tasks, while maintaining correct subjects, bindings, and positions across cases with <span class="italic">multiple objects</span>, <span class="italic">complex attributions</span>, and explicit <span class="italic">spatial layouts</span>.
-          </p>
-        </div>
-        
-        <div class="mt-10">
-          <img src="static/files/teaser/t2i_result.jpg" alt="Text-to-Image Generation Results" class="w-full h-auto rounded-lg shadow-sm">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Enhanced Editing Section -->
-  <section class="py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl font-bold text-gray-900">Enhanced Editing Capabilities</h2>
-        <div class="mt-4 h-1 w-20 bg-primary-600 mx-auto"></div>
-      </div>
-      
-      <div class="bg-gray-50 rounded-xl shadow-md p-8 max-w-5xl mx-auto">
-        <div class="prose-lg text-gray-700">
-          <p class="mb-6">
-            We surprisingly discover that, for models with <span class="italic">image editing capabilities</span>, our method also significantly improves their editing performance. RecA demonstrates consistent improvements across all editing categories, increasing the ImgEdit scores from 3.38 to <span class="font-bold text-primary-600">3.75</span> and GEdit from 6.94 to <span class="font-bold text-primary-600">7.25</span>, using only <span class="italic">1,000 training steps and 8,000 unlabeled images</span>.
-          </p>
-          <p>
-            Our method unlocks the model's inherent editing potential without expensive annotation across various tasks like addition, replacement, stylization and color modification.
-          </p>
-        </div>
-        
-        <div class="mt-10">
-          <img src="static/files/teaser/edit_result.jpg" alt="Image Editing Results" class="w-full h-auto rounded-lg shadow-sm">
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Visitor Statistics Section -->
-  <section class="py-8 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="bg-white rounded-xl shadow-md p-6 max-w-md mx-auto">
-        <div class="text-center">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4">Page Statistics</h3>
-          <div class="flex items-center justify-center space-x-4">
-            <div class="flex items-center space-x-2 text-gray-600">
-              <i class="fas fa-eye text-primary-600"></i>
-              <span class="text-sm">Total Visitors:</span>
-              <div id="visitor-count" class="font-bold text-primary-600 text-lg">
-                <!-- Visitor count will be inserted here by the script -->
-                <script type="text/javascript" id="mapmyvisitors" src="//mapmyvisitors.com/map.js?d=t6_y_-P92Qv5pi9EBxNDzlrcHpOseilvqHHLQLA87CQ&cl=ffffff&w=a"></script>
-              </div>
-            </div>
-          </div>
-          <p class="text-xs text-gray-500 mt-2">Thank you for visiting our research page!</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-white py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="flex items-center mb-6 md:mb-0">
-          <img src="static/files/teaser/logo.png" alt="RecA Logo" class="h-10 w-10 mr-3">
-          <span class="text-xl font-semibold">RecA</span>
-        </div>
-        
-        <div class="flex space-x-6">
-          <a href="https://arxiv.org/pdf/2509.07295" target="_blank" class="text-gray-300 hover:text-white transition">
-            <i class="fas fa-file-pdf text-xl"></i>
-          </a>
-          <a href="https://arxiv.org/abs/2509.07295" target="_blank" class="text-gray-300 hover:text-white transition">
-            <i class="fas fa-book-open text-xl"></i>
-          </a>
-          <a href="https://github.com/HorizonWind2004/reconstruction-alignment" target="_blank" class="text-gray-300 hover:text-white transition">
-            <i class="fab fa-github text-xl"></i>
-          </a>
-          <a href="https://huggingface.co/collections/sanaka87/reca-68ad2176380355a3dcedc068" target="_blank" class="text-gray-300 hover:text-white transition">
-            <i class="fas fa-robot text-xl"></i>
-          </a>
-        </div>
-      </div>
-      
-      <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
-        <p>© 2024 RecA Research Team. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Back to top button -->
-  <button id="back-to-top" class="fixed bottom-8 right-8 bg-primary-600 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300">
-    <i class="fas fa-arrow-up"></i>
-  </button>
-
-  <script>
-    // Back to top button
-    const backToTopButton = document.getElementById('back-to-top');
-    
-    window.addEventListener('scroll', () => {
-      if (window.pageYOffset > 300) {
-        backToTopButton.classList.remove('opacity-0', 'invisible');
-        backToTopButton.classList.add('opacity-100', 'visible');
-      } else {
-        backToTopButton.classList.remove('opacity-100', 'visible');
-        backToTopButton.classList.add('opacity-0', 'invisible');
-      }
-    });
-    
-    backToTopButton.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    });
-    
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
-        });
-      });
-    });
-    
-    // Demo gallery functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const demoItems = document.querySelectorAll('.demo-item');
-      const promptDisplay = document.getElementById('promptDisplay');
-      const demoGallery = document.getElementById('demoGallery');
-      const prevBtn = document.getElementById('galleryPrevBtn');
-      const nextBtn = document.getElementById('galleryNextBtn');
-      
-      // Gallery navigation functionality
-      const scrollAmount = 370; // Width of demo item + gap
-      
-      function updateNavButtons() {
-        const scrollLeft = demoGallery.scrollLeft;
-        const maxScroll = demoGallery.scrollWidth - demoGallery.clientWidth;
-        
-        prevBtn.disabled = scrollLeft <= 0;
-        nextBtn.disabled = scrollLeft >= maxScroll - 1; // -1 for rounding errors
-      }
-      
-      prevBtn.addEventListener('click', function() {
-        demoGallery.scrollBy({
-          left: -scrollAmount,
-          behavior: 'smooth'
-        });
-      });
-      
-      nextBtn.addEventListener('click', function() {
-        demoGallery.scrollBy({
-          left: scrollAmount,
-          behavior: 'smooth'
-        });
-      });
-      
-      // Update button states on scroll
-      demoGallery.addEventListener('scroll', updateNavButtons);
-      
-      // Initial button state
-      updateNavButtons();
-      
-      // Update button states on window resize
-      window.addEventListener('resize', updateNavButtons);
-      
-      // Handle demo item clicks
-      demoItems.forEach(item => {
-        item.addEventListener('click', function() {
-          const prompt = this.getAttribute('data-prompt');
-          
-          // Remove active class from all items
-          demoItems.forEach(i => i.classList.remove('active'));
-          
-          // Add active class to clicked item
-          this.classList.add('active');
-          
-          // Update prompt display
-          promptDisplay.innerHTML = `<div class="prompt-text"><strong>Prompt:</strong> ${prompt}</div>`;
-          promptDisplay.classList.add('active');
-        });
-      });
-      
-      // Edit comparison slider functionality
-      const editContainers = document.querySelectorAll('.edit-comparison-container');
-      
-      editContainers.forEach(container => {
-        const slider = container.querySelector('.edit-slider');
-        const editResult = container.querySelector('.edit-result');
-        const containerRect = container.getBoundingClientRect();
-        let isDragging = false;
-        let animationFrame = null;
-        
-        function updateSliderPosition(clientX) {
-          if (animationFrame) {
-            cancelAnimationFrame(animationFrame);
-          }
-          
-          animationFrame = requestAnimationFrame(() => {
-            const rect = container.getBoundingClientRect();
-            const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-            const percentage = (x / rect.width) * 100;
-            
-            // Update slider position
-            slider.style.left = `${percentage}%`;
-            
-            // Update clip-path for the edited image
-            editResult.style.clipPath = `polygon(${percentage}% 0%, 100% 0%, 100% 100%, ${percentage}% 100%)`;
-          });
-        }
-        
-        // Mouse events
-        slider.addEventListener('mousedown', (e) => {
-          isDragging = true;
-          e.preventDefault();
-        });
-        
-        document.addEventListener('mousemove', (e) => {
-          if (isDragging) {
-            updateSliderPosition(e.clientX);
-          }
-        });
-        
-        document.addEventListener('mouseup', () => {
-          isDragging = false;
-        });
-        
-        // Touch events for mobile
-        slider.addEventListener('touchstart', (e) => {
-          isDragging = true;
-          e.preventDefault();
-        });
-        
-        document.addEventListener('touchmove', (e) => {
-          if (isDragging && e.touches[0]) {
-            updateSliderPosition(e.touches[0].clientX);
-            e.preventDefault(); // Prevent scrolling
-          }
-        });
-        
-        document.addEventListener('touchend', () => {
-          isDragging = false;
-        });
-        
-        // Click on container to move slider
-        container.addEventListener('click', (e) => {
-          if (!isDragging && e.target !== slider) {
-            updateSliderPosition(e.clientX);
-          }
-        });
-      });
-    });
+document.getElementById('copy-citation').addEventListener('click', async () => {
+  const code = document.getElementById('bibtex');
+  const status = document.getElementById('citation-status');
+  try {
+    await navigator.clipboard.writeText(code.textContent);
+    status.textContent = 'BibTeX copied.';
+  } catch {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(code);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    status.textContent = 'BibTeX selected. Press Ctrl+C or ⌘C to copy.';
+  }
+});
   </script>
-
-  <script type="text/javascript">
-    // Custom visitor counter integration
-    (function() {
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.id = 'mapmyvisitors';
-      script.src = '//mapmyvisitors.com/map.js?d=t6_y_-P92Qv5pi9EBxNDzlrcHpOseilvqHHLQLA87CQ&cl=ffffff&w=a';
-      script.style.display = 'none'; // Hide the default widget
-      document.body.appendChild(script);
-      
-      // Try to extract visitor count after script loads
-      script.onload = function() {
-        setTimeout(() => {
-          const visitorCountElement = document.getElementById('visitor-count');
-          // Look for any visitor count that might be inserted by the script
-          const mapVisitorElements = document.querySelectorAll('[id*="mapmyvisitors"], [class*="mapmyvisitors"]');
-          if (mapVisitorElements.length > 0) {
-            // Try to extract number from the widget
-            const widgetText = mapVisitorElements[0].textContent || '';
-            const numberMatch = widgetText.match(/\d+/);
-            if (numberMatch) {
-              visitorCountElement.textContent = numberMatch[0];
-            } else {
-              visitorCountElement.textContent = '---';
-            }
-          } else {
-            visitorCountElement.textContent = '---';
-          }
-        }, 1000);
-      };
-    })();
-  </script>
-</body>
-</html>
+</body></html>

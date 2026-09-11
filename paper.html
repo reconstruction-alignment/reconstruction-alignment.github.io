@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RecA improves text-to-image generation and image editing in unified multimodal models through understanding-to-generation transfer and self-supervised post-training.">
+  <meta property="og:title" content="RecA: Reconstruction Alignment Improves Unified Multimodal Models">
+  <meta property="og:description" content="RecA improves text-to-image generation and image editing in unified multimodal models through understanding-to-generation transfer and self-supervised post-training.">
+  <meta property="og:url" content="https://reconstruction-alignment.github.io/paper.html">
+  <meta name="twitter:title" content="RecA: Reconstruction Alignment Improves Unified Multimodal Models">
+  <meta name="twitter:description" content="RecA improves text-to-image generation and image editing in unified multimodal models through understanding-to-generation transfer and self-supervised post-training.">
+  <link rel="canonical" href="https://reconstruction-alignment.github.io/paper.html">
+  <meta name="citation_title" content="Reconstruction Alignment Improves Unified Multimodal Models">
+  <meta name="citation_author" content="Ji Xie">
+  <meta name="citation_author" content="Trevor Darrell">
+  <meta name="citation_author" content="Luke Zettlemoyer">
+  <meta name="citation_author" content="XuDong Wang">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="International Conference on Learning Representations">
+  <meta name="citation_abstract_html_url" content="https://reconstruction-alignment.github.io/paper.html">
+  <meta name="citation_volume" content="2026">
+  <meta name="citation_firstpage" content="120095">
+  <meta name="citation_lastpage" content="120137">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "@id": "https://openreview.net/forum?id=ppQWp8yrm7",
+  "name": "Reconstruction Alignment Improves Unified Multimodal Models",
+  "url": "https://openreview.net/forum?id=ppQWp8yrm7",
+  "mainEntityOfPage": "https://reconstruction-alignment.github.io/paper.html",
+  "sameAs": [
+    "https://arxiv.org/abs/2509.07295"
+  ],
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Ji Xie",
+      "url": "https://horizonwind2004.github.io/"
+    },
+    {
+      "@type": "Person",
+      "name": "Trevor Darrell",
+      "url": "https://people.eecs.berkeley.edu/~trevor/"
+    },
+    {
+      "@type": "Person",
+      "name": "Luke Zettlemoyer",
+      "url": "https://homes.cs.washington.edu/~lsz/"
+    },
+    {
+      "@type": "Person",
+      "name": "XuDong Wang",
+      "url": "https://xudongfrankwang.github.io/",
+      "affiliation": [
+        {
+          "@type": "Organization",
+          "name": "UC Berkeley"
+        },
+        {
+          "@type": "Organization",
+          "name": "Duke University"
+        }
+      ]
+    }
+  ],
+  "description": "RecA improves text-to-image generation and image editing in unified multimodal models through understanding-to-generation transfer and self-supervised post-training.",
+  "isPartOf": {
+    "@type": "PublicationVolume",
+    "volumeNumber": "2026",
+    "isPartOf": {
+      "@type": "CreativeWork",
+      "name": "International Conference on Learning Representations"
+    }
+  },
+  "pageStart": "120095",
+  "pageEnd": "120137",
+  "keywords": [
+    "unified multimodal models",
+    "unified understanding and generation",
+    "self-supervised post-training",
+    "understanding-to-generation transfer",
+    "semantic reconstruction",
+    "text-to-image generation",
+    "image editing"
+  ],
+  "abstract": "Unified multimodal models (UMMs) unify visual understanding and generation within a single architecture. However, conventional training relies on image-text pairs (or sequences) whose captions are typically sparse and miss fine-grained visual details, even when they use hundreds of words to describe a simple image. We introduce Reconstruction Alignment (RECA), a resource-efficient post-training method that leverages visual understanding encoder embeddings as dense \"text prompts\", providing rich supervision without captions. Concretely, RECA conditions a UMM on its own visual understanding embeddings and optimizes it to reconstruct the input image with a self-supervised reconstruction loss, thereby realigning understanding and generation. Despite its simplicity, RECA is broadly applicable: across autoregressive, masked-autoregressive, and diffusion-based UMMs, it consistently improves generation and editing fidelity. With only 27 GPU hours, post-training with RECA substantially improves image generation performance on GenEval (0.73 → 0.90) and DPGBench (80.93 → 88.15), while also boosting editing benchmarks (ImgEdit 3.38 → 3.75, GEdit 6.94 → 7.27). Notably, RECA surpasses much larger open-source models and applies broadly across diverse UMM architectures, establishing it as an efficient and general post-training alignment strategy for UMMs."
+}
+</script>
+  
+  <title>Reconstruction Alignment Improves Unified Multimodal Models | Abstract · ICLR 2026</title>
+  
+  <link rel="icon" type="image/png" href="static/files/teaser/logo.png">
+  <link rel="shortcut icon" href="static/files/teaser/logo.png" type="image/png">
+
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#171b24;font:17px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:900px;margin:34px auto;padding:0 26px 45px}a{color:#315cf5;text-underline-offset:3px}.back{font-size:14px;text-decoration:none}h1{font-size:32px;line-height:1.2;font-weight:600;letter-spacing:-.035em;margin:28px 0 13px}h2{font-size:20px;line-height:1.3;margin:26px 0 10px}.authors{margin:0;font-size:17px}.authors a{color:inherit;text-decoration:none}.affiliations,.publication,.scope,.source{font-size:14px;color:#626876;margin:8px 0}.publication{color:#171b24}.abstract{margin:0}.links{display:flex;gap:20px;flex-wrap:wrap;padding:20px 0;border-bottom:1px solid #e0e3e9;font-size:15px}.scope{padding:16px 0;border-bottom:1px solid #e0e3e9}pre{padding:20px;background:#f4f6f9;overflow:auto;font:13px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace;border-radius:4px}:focus-visible{outline:3px solid #315cf5;outline-offset:4px}sup{font-size:11px;color:#315cf5}@media(max-width:600px){main{margin:23px auto;padding-inline:20px}h1{font-size:27px}body{font-size:16px}.links{gap:15px}}
+</style></head><body><main>
+<a class="back" href="./">← RecA project</a>
+<h1>Reconstruction Alignment Improves Unified Multimodal Models</h1>
+<p class="authors"><a href="https://horizonwind2004.github.io/">Ji Xie</a><sup>1</sup>, <a href="https://people.eecs.berkeley.edu/~trevor/">Trevor Darrell</a><sup>1</sup>, <a href="https://homes.cs.washington.edu/~lsz/">Luke Zettlemoyer</a><sup>2</sup>, <a href="https://xudongfrankwang.github.io/">XuDong Wang</a><sup>1,3</sup></p>
+<p class="affiliations"><sup>1</sup> UC Berkeley · <sup>2</sup> University of Washington · <sup>3</sup> Duke University</p>
+<p class="publication">International Conference on Learning Representations (ICLR), 2026 · Vol. 2026, pp. 120095–120137</p>
+<h2>Abstract</h2>
+<p class="abstract">Unified multimodal models (UMMs) unify visual understanding and generation within a single architecture. However, conventional training relies on image-text pairs (or sequences) whose captions are typically sparse and miss fine-grained visual details, even when they use hundreds of words to describe a simple image. We introduce Reconstruction Alignment (RECA), a resource-efficient post-training method that leverages visual understanding encoder embeddings as dense &quot;text prompts&quot;, providing rich supervision without captions. Concretely, RECA conditions a UMM on its own visual understanding embeddings and optimizes it to reconstruct the input image with a self-supervised reconstruction loss, thereby realigning understanding and generation. Despite its simplicity, RECA is broadly applicable: across autoregressive, masked-autoregressive, and diffusion-based UMMs, it consistently improves generation and editing fidelity. With only 27 GPU hours, post-training with RECA substantially improves image generation performance on GenEval (0.73 → 0.90) and DPGBench (80.93 → 88.15), while also boosting editing benchmarks (ImgEdit 3.38 → 3.75, GEdit 6.94 → 7.27). Notably, RECA surpasses much larger open-source models and applies broadly across diverse UMM architectures, establishing it as an efficient and general post-training alignment strategy for UMMs.</p>
+<p class="source">Published abstract, <a href="https://arxiv.org/abs/2509.07295v4">arXiv:2509.07295v4</a>.</p>
+<nav class="links" aria-label="Paper resources"><a href="https://arxiv.org/pdf/2509.07295">Read full paper (PDF) ↗</a><a href="https://openreview.net/forum?id=ppQWp8yrm7">ICLR / OpenReview ↗</a><a href="https://github.com/HorizonWind2004/reconstruction-alignment">Code ↗</a><a href="./">Project &amp; results ↗</a><a href="citation.bib" download>Download BibTeX ↓</a></nav>
+<p class="scope"><strong>Experimental scope.</strong> The 27 A100 GPU-hour budget refers to the BAGEL experiment. The highest Harmon generation scores (0.90 GenEval and 88.15 DPG-Bench) use a separate SFT → RecA recipe with GPT-4o-Image distillation data. See <a href="./#results">model-specific results</a> and the <a href="https://arxiv.org/html/2509.07295v4">paper’s experiments and Appendix E</a> for the full settings.</p>
+<h2>Citation</h2><pre><code>@inproceedings{xie2026reconstruction,
+  title={Reconstruction alignment improves unified multimodal models},
+  author={Xie, Ji and Zettlemoyer, Luke and Wang, Xudong and others},
+  booktitle={International Conference on Learning Representations},
+  volume={2026},
+  pages={120095--120137},
+  year={2026}
+}</code></pre>
+</main></body></html>
