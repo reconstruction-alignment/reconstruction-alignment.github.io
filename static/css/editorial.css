@@ -1,0 +1,277 @@
+/*
+ * RecA — editorial layer.
+ * Loaded after each homepage's inline base styles (index.html, zh.html).
+ * Visual and layout only: no content, numbers or links live here.
+ */
+
+:root {
+  --ink: #15171c;
+  --muted: #5a5f6a;
+  --blue: #2444c4;
+  --line: #dcd9d1;
+  --rule: #cbc7bc;
+  --paper: #fcfbf8;
+  --wash: #f2f0ea;
+  --night: #14161b;
+  --plate: #fff;
+  --on-night: #f4f2ec;
+  --serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans-zh: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+/* ---------- Base ---------- */
+
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+.results-section :focus-visible { outline-color: #b6c6ff; }
+
+.skip-link { background: var(--paper); border: 1px solid var(--ink); }
+
+h1, h2, h3 { font-family: var(--serif); font-weight: 500; }
+h2 { font-size: clamp(32px, 3.5vw, 50px); line-height: 1.08; letter-spacing: -.025em; }
+h3 { font-size: 24px; line-height: 1.25; letter-spacing: -.015em; }
+
+.eyebrow {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: .1em;
+}
+
+/* Chinese headings stay in the sans stack: CJK serif fallbacks are uneven across systems. */
+:lang(zh) :is(h2, h3, .hero-statement) {
+  font-family: var(--sans-zh);
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+:lang(zh) h2 { font-size: clamp(28px, 3vw, 42px); line-height: 1.25; }
+:lang(zh) .eyebrow { font-family: var(--sans-zh); letter-spacing: .06em; }
+
+/* ---------- Navigation ---------- */
+
+.site-nav {
+  background: rgba(252, 251, 248, .94);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  backdrop-filter: saturate(1.4) blur(10px);
+}
+.nav-brand { font-family: var(--serif); font-weight: 600; font-size: 28px; letter-spacing: -.02em; }
+.nav-brand span { font-style: italic; font-size: 16px; }
+#nav-links a { padding-block: 6px; }
+#nav-links a:not(.nav-paper):hover { text-decoration: underline; text-underline-offset: 6px; }
+#nav-links .nav-paper { padding: 8px 17px; border-color: var(--ink); border-radius: 2px; }
+#nav-links .nav-paper:hover { background: var(--ink); color: var(--paper); }
+.language-switch { display: inline-flex; align-items: center; min-height: 40px; border-color: var(--rule); border-radius: 2px; }
+#menu-toggle { min-height: 40px; padding-inline: 12px; border-color: var(--rule); border-radius: 2px; }
+
+/* ---------- Hero ---------- */
+
+.hero { padding: 52px 0 0; }
+.hero-main { grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr); gap: 68px; }
+
+.acceptance { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 26px; }
+
+h1 { font-size: clamp(44px, 5vw, 76px); line-height: 1; letter-spacing: -.03em; }
+h1 .title-rest {
+  font-size: .5em;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -.015em;
+  color: var(--muted);
+  max-width: none;
+  margin-top: 18px;
+}
+
+.hero-statement {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 25px;
+  line-height: 1.3;
+  letter-spacing: -.01em;
+  margin: 26px 0 14px;
+}
+:lang(zh) .hero-statement { font-size: 22px; font-weight: 500; line-height: 1.45; }
+.hero-description { font-size: 17px; max-width: 520px; }
+
+.resources { gap: 10px 24px; margin-top: 30px; }
+.resource {
+  padding: 10px 0;
+  gap: 8px;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+  font-size: 15px;
+}
+.resource:hover { background: none; border-color: var(--blue); color: var(--blue); }
+.resource .arrow { font-size: 17px; }
+.resource.primary { padding: 10px 18px; gap: 14px; border: 1px solid var(--ink); border-radius: 2px; }
+.resource.primary:hover { background: var(--blue); border-color: var(--blue); color: #fff; }
+.resource.quiet { padding-inline: 0; border-bottom-color: transparent; color: var(--muted); }
+.resource.quiet:hover { border-bottom-color: var(--blue); }
+
+/* Mosaic: one lead image and five supporting samples, all from the gallery below. */
+.hero-mosaic { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.hero-art .hero-mosaic img { border-radius: 2px; background: var(--wash); }
+.hero-mosaic .hero-lead { grid-column: span 2; grid-row: span 2; }
+.hero-art figcaption { align-items: center; padding-top: 12px; }
+.hero-art figcaption a { text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 4px; padding-block: 6px; }
+.hero-art figcaption a:hover { text-decoration-color: currentColor; }
+
+.author-band { margin-top: 52px; border-color: var(--line); }
+.authors { font-size: 17px; }
+.authors a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* ---------- Section furniture ---------- */
+
+.section-heading, .method-lead { border-top: 1px solid var(--ink); padding-top: 20px; }
+.results-section .section-heading { border-top-color: var(--on-night); }
+
+/* ---------- Gallery ---------- */
+
+.gallery {
+  grid-auto-columns: calc((100% - 42px) / 3.5);
+  gap: 14px;
+  /* Room for the selection and focus rings inside the scroll container. */
+  padding: 6px 6px 16px;
+  margin-inline: -6px;
+  scroll-padding-inline: 6px;
+}
+.demo-item img { border-radius: 2px; background: var(--wash); }
+.demo-item .image-number { font-size: 12px; }
+.demo-item[aria-pressed="true"]:after { content: none; }
+.demo-item[aria-pressed="true"] img { outline: 2px solid var(--ink); outline-offset: 2px; }
+.demo-item[aria-pressed="true"] .image-number { color: var(--ink); font-weight: 600; }
+.demo-item:focus-visible { outline: none; }
+.demo-item:focus-visible img { outline: 3px solid var(--blue); outline-offset: 2px; }
+.circle-btn { background: var(--paper); border-color: var(--rule); }
+
+#promptDisplay {
+  margin-top: 6px;
+  padding-top: 20px;
+  min-height: 96px;
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+#promptDisplay .prompt-text { max-width: 900px; }
+:lang(zh) #promptDisplay { font-family: inherit; font-size: 16px; line-height: 1.65; }
+
+/* ---------- Motivation ---------- */
+
+#motivation { padding-top: 8px; }
+.motivation-grid { gap: 0 56px; grid-template-rows: repeat(4, auto); }
+.motivation-item { border-top: 1px solid var(--ink); padding-top: 20px; }
+.motivation-item h3 { font-size: 30px; }
+.motivation-item figure {
+  align-self: start;
+  background: var(--plate);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 22px;
+}
+/* Align the two figures on a shared baseline when subgrid is available. */
+@supports (grid-template-rows: subgrid) {
+  .motivation-item { display: grid; grid-template-rows: subgrid; grid-row: span 4; row-gap: 0; }
+}
+
+/* ---------- Method ---------- */
+
+.method-copy { color: #4a4f5a; }
+.pipeline { background: var(--plate); border: 1px solid var(--line); border-radius: 2px; }
+.method-step, .training-note { border-top-color: var(--rule); }
+
+/* ---------- Results ---------- */
+
+.results-section { color: var(--on-night); }
+.result-block h3 { font-size: 24px; }
+.metric-value { align-items: baseline; }
+.metric-value .before { font-family: var(--serif); font-size: 26px; }
+.metric-value strong {
+  font-family: var(--serif);
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--on-night);
+}
+.figure-details summary { min-height: 44px; }
+.figure-details figure { border-radius: 2px; }
+
+/* ---------- Editing ---------- */
+
+.edit-comparison-container { border-radius: 2px; }
+.edit-label { border-radius: 2px; }
+
+/* ---------- Citation and footer ---------- */
+
+.citation-actions a { text-decoration: underline; text-underline-offset: 3px; padding-block: 8px; }
+.copy-button { background: var(--paper); border-color: var(--rule); border-radius: 2px; padding: 8px 14px; }
+pre { border: 1px solid var(--line); border-radius: 2px; }
+.footer-links a { padding-block: 6px; }
+#back-to-top { background: var(--paper); border-color: var(--rule); }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1100px) {
+  .hero-main { gap: 40px; }
+}
+
+@media (max-width: 900px) {
+  /* Stack the hero and bring the images directly under the title. */
+  .hero { padding-top: 36px; }
+  .hero-main { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  .hero-copy { display: contents; }
+  .hero-art { order: 1; margin: 28px 0 4px; }
+  .hero-statement, .hero-description, .resources { order: 2; }
+  .hero-mosaic img:nth-child(n+4) { display: none; }
+  .hero-art figcaption { display: flex; font-size: 13px; }
+  .hero-art figcaption .mono { display: inline; margin: 0; }
+  h1 { font-size: clamp(40px, 9vw, 72px); }
+  .hero-description { max-width: 640px; }
+
+  .motivation-grid { gap: 0 32px; }
+  .motivation-item h3 { font-size: 25px; }
+  .motivation-item figure { padding: 14px; }
+
+  .metric-value strong { font-size: 38px; }
+  .metric-value .before { font-size: 20px; }
+}
+
+@media (max-width: 800px) {
+  .gallery { grid-auto-columns: calc((100% - 28px) / 2.4); }
+  .author-band { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .author-note { display: block; max-width: none; text-align: left; }
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: clamp(38px, 11vw, 56px); }
+  .hero-statement { font-size: 21px; margin-top: 22px; }
+  :lang(zh) .hero-statement { font-size: 20px; }
+  .hero-art { margin-top: 24px; }
+  .hero-mosaic { gap: 4px; }
+
+  .gallery { grid-auto-columns: 78%; gap: 12px; }
+  .circle-btn { width: 44px; height: 44px; }
+  #promptDisplay { font-size: 17px; min-height: 0; }
+  :lang(zh) #promptDisplay { font-size: 15px; }
+
+  .motivation-grid { grid-template-rows: none; gap: 44px 0; }
+  .motivation-item { display: block; grid-row: auto; }
+  .motivation-item figure { padding: 12px; }
+
+  .metric-value strong { font-size: 44px; }
+  .metric-value .before { font-size: 22px; }
+
+  #back-to-top { width: 44px; height: 44px; }
+}
+
+@media (max-width: 370px) {
+  .metric-value strong { font-size: 38px; }
+  .metric-value .before { font-size: 19px; }
+}
+
+@media print {
+  .site-nav, #back-to-top, .gallery-controls, .visitor-stats { display: none; }
+  .results-section { background: none; color: var(--ink); }
+  .metric-value strong { color: var(--ink); }
+}
